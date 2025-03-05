@@ -1,12 +1,10 @@
 // src/components/Auth/Signup.js
 import React, { useState } from 'react';
 import { Form, Input, Button, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 
 const Signup = () => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -14,7 +12,8 @@ const Signup = () => {
       const res = await api.post('/signup', values);
       localStorage.setItem('token', res.data.token);
       message.success('Registro exitoso');
-      navigate('/dashboard');
+      // Recargar la página tras el registro
+      window.location.reload();
     } catch (error) {
       message.error(error.response?.data || 'Error en el registro');
     } finally {

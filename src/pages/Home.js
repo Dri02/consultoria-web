@@ -1,25 +1,24 @@
 // src/pages/Home.js
-import React from 'react';
-import { Typography, Button } from 'antd';
-import { useNavigate } from 'react-router-dom';
-
-const { Title, Paragraph } = Typography;
+import React, { useState, useEffect } from 'react';
 
 const Home = () => {
-  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  }, []);
+
+  if (isLoggedIn) {
+    // Panel en blanco cuando el usuario está autenticado
+    return <div style={{ padding: '50px', textAlign: 'center' }}></div>;
+  }
+
+  // Contenido público para usuarios no autenticados (puedes personalizarlo)
   return (
-    <div style={{ textAlign: 'center', padding: '50px' }}>
-      <Title>Bienvenido a ConsulTorIa Web</Title>
-      <Paragraph>
-        Plataforma para la gestión de observaciones en consultoría TI.
-      </Paragraph>
-      <Button type="primary" onClick={() => navigate('/login')}>
-        Iniciar Sesión
-      </Button>
-      <Button style={{ marginLeft: 10 }} onClick={() => navigate('/signup')}>
-        Registrarse
-      </Button>
+    <div style={{ padding: '50px', textAlign: 'center' }}>
+      <h1>Bienvenido a ConsulTorIa</h1>
+      <p>Esta es la página de inicio pública.</p>
     </div>
   );
 };

@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom"; // Usamos useLocation y useNavigate para manejar la navegación
 import axios from "axios";
-import "./css/Register"; // Archivo CSS para estilos
+import "./css/UpdateAccount"; // Archivo CSS para estilos
 
-export default function Register({ navigation }) {
+export default function UpdateAccount() {
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
-  const [enterprise, setEnterprise] = useState("");
   const [user, setUser] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [enterprises, setEnterprises] = useState([]);
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [photo, setPhoto] = useState("");
+  const [olduser, setOlduser] = useState("");
+  const [oldemail, setOldemail] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [infoModal, setInfoModal] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { data } = location.state || {}; // Obtenemos los parámetros desde la ubicación
 
   const isAnyFieldEmpty = () => {
     return !name || !lastname || !user || !email || !password;
@@ -40,56 +44,59 @@ export default function Register({ navigation }) {
     setPasswordVisible(!passwordVisible);
   };
 
-  const register = async () => {
-    const data = {
-      name: name,
-      lastname: lastname,
-      enterprise: enterprise,
-      username: user,
-      email: email,
-      password: password,
+  const openImagePicker = async () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPhoto(reader.result.split(",")[1]); // Guardar la imagen en base64
+        };
+        reader.readAsDataURL(file);
+      }
     };
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3004/verifyEmailRegister",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      setInfo(response.data);
-      window.location.href = `/verify-email?email=${encodeURIComponent(
-        email
-      )}&role=register`; // Redirigir a la página de verificación
-    } catch (error) {
-      setInfo(error.response ? error.response.data : "Error al conectar con el servidor");
-    }
+    input.click();
   };
 
-  const getEnterprises = async () => {
-    try {
-      const response = await axios.get("http://localhost:3004/getEnterprises");
-      if (response) {
-        const dataArray = response.data.map((item) => ({
-          value: item.trim(),
-          label: item.trim(),
-        }));
-        setEnterprises(dataArray);
-      } else {
-        setInfo("No data found in response");
-      }
-    } catch (error) {
-      if (error.response) {
-        setInfo(`Server error: ${error.response.data || error.response.status}`);
-      } else if (error.request) {
-        setInfo("No response from server. Please check if the server is running.");
-      } else {
-        setInfo(`Error: ${error.message}`);
-      }
-    }
+  const updateAccount = async () => {
+    const data = JSON.stringify({
+      username: user,
+      email: email,
+      olduser: olduser,
+      oldemail: oldemail,
+    });
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("lastname", lastname);
+    formData.append("username", user);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("photo", photo);
+    formData.append("olduser", olduser);
+
+    await axios
+      .post("http://localhost:3004/verifyEmailUpdate", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        setInfo(response.data);
+        navigate("/verify-email", {
+          state: {
+            email: email,
+            role: "update",
+            data: formData,
+          },
+        });
+      })
+      .catch((error) => {
+        setInfo(error.response.data);
+      });
   };
 
   const setInfo = (info) => {
@@ -98,18 +105,34 @@ export default function Register({ navigation }) {
   };
 
   useEffect(() => {
-    getEnterprises();
-  }, []);
-
-  const filteredEnterprises = enterprises.filter((item) =>
-    item.label.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+    if (data) {
+      setName(data.name);
+      setLastname(data.lastname);
+      setUser(data.user);
+      setEmail(data.email);
+      setPhoto(data.photo);
+      setOlduser(data.user);
+      setOldemail(data.email);
+    }
+  }, [data]);
 
   return (
     <div className="container">
       <div className="header">
-        <span className="account-icon">👤</span>
-        <h1 className="title-header">Registra una cuenta</h1>
+        <div className="avatar-container">
+          {photo ? (
+            <img
+              src={`data:image/png;base64,${photo}`}
+              alt="Profile"
+              className="image"
+            />
+          ) : (
+            <span className="account-icon">👤</span>
+          )}
+          <button className="camera-icon" onClick={openImagePicker}>
+            📷
+          </button>
+        </div>
       </div>
       <div className="text-input-container">
         <input
@@ -130,27 +153,6 @@ export default function Register({ navigation }) {
           onBlur={() => setLastname(lastname.trim())}
           className="text-input"
         />
-        <div className="dropdown-container">
-          <input
-            type="text"
-            placeholder="Buscar empresa"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
-          <select
-            value={enterprise}
-            onChange={(e) => setEnterprise(e.target.value)}
-            className="dropdown"
-          >
-            <option value="">Selecciona tu empresa</option>
-            {filteredEnterprises.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-        </div>
         <input
           type="text"
           placeholder="Introduce un nombre de usuario"
@@ -187,18 +189,10 @@ export default function Register({ navigation }) {
       <button
         className={`button ${isAnyFieldEmpty() ? "disabled" : ""}`}
         disabled={isAnyFieldEmpty()}
-        onClick={register}
+        onClick={updateAccount}
       >
-        Registrar
+        Actualizar
       </button>
-      <div className="text-container">
-        <div className="signup-container">
-          <p>¿Ya tienes una cuenta?</p>
-          <a href="/login" className="link-text">
-            Autentícate aquí
-          </a>
-        </div>
-      </div>
 
       {isModalVisible && (
         <div className="modal-overlay">

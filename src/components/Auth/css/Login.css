@@ -1,0 +1,145 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: white;
+    min-height: 100vh;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .lock-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+  }
+  
+  .title-header {
+    color: black;
+    font-weight: 500;
+  }
+  
+  .text-input-container {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 20px;
+  }
+  
+  .text-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #939393;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .password-input-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .button {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    background-color: #3366ff;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .button.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .button:hover:not(.disabled) {
+    background-color: #2952cc;
+  }
+  
+  .text-container {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .signup-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  .forgot-password-container {
+    margin-top: 10px;
+  }
+  
+  .link-text {
+    margin-left: 5px;
+    color: #3366ff;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  
+  .link-text:hover {
+    text-decoration: underline;
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-info {
+    background-color: white;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .modal-info-text-header {
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .container-modal-info-button {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .modal-info-button {
+    padding: 10px 20px;
+    background-color: #3366ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .modal-info-button:hover {
+    background-color: #2952cc;
+  }

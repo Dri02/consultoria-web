@@ -1,25 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router"; // Para manejar la navegación y los parámetros
+import { useLocation, useNavigate } from "react-router-dom"; // Usamos react-router-dom para web
 import { FiFolder, FiChevronDown, FiEdit } from "react-icons/fi"; // Iconos de React Icons
-import Select from "react-select"; // Para el dropdown
+import Select from "react-select"; // Componente para el dropdown
 import axios from "axios";
 import "./styles/FormScreen.css"; // Estilos CSS
 
 export default function CreateObservation() {
+  // Estados para los datos de cada dropdown
   const [entityData, setEntityData] = useState([]);
   const [uebData, setUebData] = useState([]);
   const [unitData, setUnitData] = useState([]);
   const [areaData, setAreaData] = useState([]);
   const [processData, setProcessData] = useState([]);
   const [workerData, setWorkerData] = useState([]);
+
+  // Estados para los valores seleccionados o escritos
   const [entity, setEntity] = useState("");
   const [ueb, setUeb] = useState("");
   const [unit, setUnit] = useState("");
   const [area, setArea] = useState("");
   const [process, setProcess] = useState("");
   const [worker, setWorker] = useState("");
+
+  // Estados para mostrar modal y mensajes
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [infoModal, setInfoModal] = useState("");
+
+  // Estados para controlar si se deben mostrar inputs manuales o dropdowns
   const [isEmptyData, setIsEmptyData] = useState({
     isEmptyEntityData: false,
     isEmptyUebData: false,
@@ -36,6 +43,8 @@ export default function CreateObservation() {
     isDisabledEditProcessIcon: true,
     isDisabledEditWorkerIcon: true,
   });
+
+  // URLs de los endpoints
   const urls = [
     "http://localhost:4000/api/entity",
     "http://localhost:4000/api/ueb",
@@ -44,6 +53,8 @@ export default function CreateObservation() {
     "http://localhost:4000/api/process",
     "http://localhost:4000/api/worker",
   ];
+
+  // Configuración para cada endpoint
   const infoUrls = {
     entity: {
       setData: setEntityData,
@@ -94,9 +105,11 @@ export default function CreateObservation() {
       father: "Area",
     },
   };
-  const location = useLocation(); // Obtiene los parámetros de la ruta
-  const navigate = useNavigate(); // Para la navegación
 
+  const location = useLocation(); // Se obtiene el estado de la ruta si fuera necesario
+  const navigate = useNavigate();
+
+  // Alterna la bandera de edición de un input/dropdown (para mostrar o ocultar el botón de edición)
   const handleIconPress = (isEmptyDataKey) => {
     setIsEmptyData((prevState) => ({
       ...prevState,
@@ -104,7 +117,16 @@ export default function CreateObservation() {
     }));
   };
 
-  const handleResponse = (response, setData, isEmptyDataKey, isDisabledEditIconKey, valueKey, labelKey, fatherKey) => {
+  // Maneja la respuesta del servidor para formatear y guardar los datos
+  const handleResponse = (
+    response,
+    setData,
+    isEmptyDataKey,
+    isDisabledEditIconKey,
+    valueKey,
+    labelKey,
+    fatherKey
+  ) => {
     if (response && response.data) {
       if (response.data.length > 0) {
         const dataArray = response.data.map((item) => ({
@@ -135,6 +157,7 @@ export default function CreateObservation() {
     }
   };
 
+  // Función para obtener los datos de los endpoints
   const fetchData = async (urlsToFetch, infoUrlsToFetch, exception) => {
     urlsToFetch.forEach((url) => {
       if (url !== exception) {
@@ -155,7 +178,9 @@ export default function CreateObservation() {
           .catch((error) => {
             if (error.response) {
               const { config, response } = error;
-              const dataKey = config.url.split("/").pop().charAt(0).toUpperCase() + config.url.split("/").pop().slice(1);
+              const dataKey =
+                config.url.split("/").pop().charAt(0).toUpperCase() +
+                config.url.split("/").pop().slice(1);
               const isEmptyDataKey = `isEmpty${dataKey}Data`;
               const isDisabledEditIconKey = `isDisabledEdit${dataKey}Icon`;
 
@@ -169,6 +194,7 @@ export default function CreateObservation() {
                   ...prevState,
                   [isDisabledEditIconKey]: true,
                 }));
+                // Vuelve a intentar obtener datos, exceptuando la URL que falló
                 fetchData(urlsToFetch, infoUrlsToFetch, config.url);
               } else {
                 setInfo("Error al obtener los datos");
@@ -181,6 +207,7 @@ export default function CreateObservation() {
     });
   };
 
+  // Verifica si existen datos en el array filtrado por el valor del "father" y ajusta banderas de edición
   const verifyDataLength = (data, element, isEmptyDataKey, isDisabledEditIconKey) => {
     const filterData = data.filter((item) => item.father === element);
 
@@ -205,6 +232,7 @@ export default function CreateObservation() {
     }
   };
 
+  // Muestra el modal con un mensaje de error o información
   const setInfo = (info) => {
     setIsModalVisible(true);
     setInfoModal(info);
@@ -221,7 +249,7 @@ export default function CreateObservation() {
         <h1 className="titleHeader">Crea observaciones</h1>
       </div>
       <div className="dataInputContainer">
-        {/* Entity Input */}
+        {/* Campo: Entidad */}
         <div className="dataInput">
           {isEmptyData.isEmptyEntityData ? (
             <div className="dataInputView">
@@ -243,7 +271,9 @@ export default function CreateObservation() {
               {!isDisabledEditIcon.isDisabledEditEntityIcon && (
                 <button
                   className="editTextInputToggle"
-                  onClick={() => handleIconPress(infoUrls["entity"].isEmptyData)}
+                  onClick={() =>
+                    handleIconPress(infoUrls["entity"].isEmptyData)
+                  }
                 >
                   <FiEdit size={22} />
                 </button>
@@ -269,7 +299,9 @@ export default function CreateObservation() {
               {!isDisabledEditIcon.isDisabledEditEntityIcon && (
                 <button
                   className="editDropDownToggle"
-                  onClick={() => handleIconPress(infoUrls["entity"].isEmptyData)}
+                  onClick={() =>
+                    handleIconPress(infoUrls["entity"].isEmptyData)
+                  }
                 >
                   <FiEdit size={22} />
                 </button>
@@ -278,7 +310,7 @@ export default function CreateObservation() {
           )}
         </div>
 
-        {/* UEB Input */}
+        {/* Campo: UEB */}
         <div className="dataInput">
           {isEmptyData.isEmptyUebData ? (
             <div className="dataInputView">
@@ -336,7 +368,7 @@ export default function CreateObservation() {
           )}
         </div>
 
-        {/* Unit Input */}
+        {/* Campo: Unidad */}
         <div className="dataInput">
           {isEmptyData.isEmptyUnitData ? (
             <div className="dataInputView">
@@ -394,7 +426,7 @@ export default function CreateObservation() {
           )}
         </div>
 
-        {/* Area Input */}
+        {/* Campo: Área */}
         <div className="dataInput">
           {isEmptyData.isEmptyAreaData ? (
             <div className="dataInputView">
@@ -464,7 +496,7 @@ export default function CreateObservation() {
           )}
         </div>
 
-        {/* Process Input */}
+        {/* Campo: Proceso */}
         <div className="dataInput">
           {isEmptyData.isEmptyProcessData ? (
             <div className="dataInputView">
@@ -478,7 +510,9 @@ export default function CreateObservation() {
               {!isDisabledEditIcon.isDisabledEditProcessIcon && (
                 <button
                   className="editTextInputToggle"
-                  onClick={() => handleIconPress(infoUrls["process"].isEmptyData)}
+                  onClick={() =>
+                    handleIconPress(infoUrls["process"].isEmptyData)
+                  }
                 >
                   <FiEdit size={22} />
                 </button>
@@ -490,14 +524,18 @@ export default function CreateObservation() {
                 placeholder="Selecciona un proceso"
                 options={processData.filter((item) => item.father === area)}
                 value={processData.find((option) => option.value === process)}
-                onChange={(selectedOption) => setProcess(selectedOption.value)}
+                onChange={(selectedOption) =>
+                  setProcess(selectedOption.value)
+                }
                 isDisabled={!area}
                 className="dataInputWidth"
               />
               {!isDisabledEditIcon.isDisabledEditProcessIcon && (
                 <button
                   className="editDropDownToggle"
-                  onClick={() => handleIconPress(infoUrls["process"].isEmptyData)}
+                  onClick={() =>
+                    handleIconPress(infoUrls["process"].isEmptyData)
+                  }
                 >
                   <FiEdit size={22} />
                 </button>
@@ -506,7 +544,7 @@ export default function CreateObservation() {
           )}
         </div>
 
-        {/* Worker Input */}
+        {/* Campo: Trabajador */}
         <div className="dataInput">
           {isEmptyData.isEmptyWorkerData ? (
             <div className="dataInputView">
@@ -520,7 +558,9 @@ export default function CreateObservation() {
               {!isDisabledEditIcon.isDisabledEditWorkerIcon && (
                 <button
                   className="editTextInputToggle"
-                  onClick={() => handleIconPress(infoUrls["worker"].isEmptyData)}
+                  onClick={() =>
+                    handleIconPress(infoUrls["worker"].isEmptyData)
+                  }
                 >
                   <FiEdit size={22} />
                 </button>
@@ -532,14 +572,18 @@ export default function CreateObservation() {
                 placeholder="Selecciona un trabajador"
                 options={workerData.filter((item) => item.father === area)}
                 value={workerData.find((option) => option.value === worker)}
-                onChange={(selectedOption) => setWorker(selectedOption.value)}
+                onChange={(selectedOption) =>
+                  setWorker(selectedOption.value)
+                }
                 isDisabled={!area}
                 className="dataInputWidth"
               />
               {!isDisabledEditIcon.isDisabledEditWorkerIcon && (
                 <button
                   className="editDropDownToggle"
-                  onClick={() => handleIconPress(infoUrls["worker"].isEmptyData)}
+                  onClick={() =>
+                    handleIconPress(infoUrls["worker"].isEmptyData)
+                  }
                 >
                   <FiEdit size={22} />
                 </button>
@@ -553,14 +597,7 @@ export default function CreateObservation() {
         onClick={() => {
           navigate("/form-screen-dos", {
             state: {
-              dataParams: {
-                entity: entity,
-                ueb: ueb,
-                unit: unit,
-                area: area,
-                process: process,
-                worker: worker,
-              },
+              dataParams: { entity, ueb, unit, area, process, worker },
             },
           });
         }}

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // Para manejar la navegación y los parámetros
-import { FiFolder, FiChevronDown, FiEdit } from "react-icons/fi"; // Iconos de React Icons
-import Select from "react-select"; // Para el dropdown y multiselect
+import { useLocation, useNavigate } from "react-router-dom"; // Para manejar navegación y parámetros
+import { FiFolder, FiChevronDown, FiEdit } from "react-icons/fi"; // Iconos
+import Select from "react-select"; // Para dropdown y multiselect
 import axios from "axios";
-//import "./styles/FormScreenDos.css"; // Estilos CSS
+import "./styles/FormScreenDos.css"; // Estilos CSS
 
 export default function CreateConsultancy() {
   const [nameConsultancy, setNameConsultancy] = useState("");
@@ -16,84 +16,83 @@ export default function CreateConsultancy() {
   const [collaborators, setCollaborators] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [infoModal, setInfoModal] = useState("");
-  const [observationTypeData, setObservationTypeData] = useState([
+  const [observationTypeData] = useState([
     { value: "Grabación de video", label: "Grabación de video" },
     { value: "Entrevista", label: "Entrevista" },
     { value: "Chat", label: "Chat" },
   ]);
-  const [viewData, setViewData] = useState([
+  const [viewData] = useState([
     { value: "Pública", label: "Pública" },
     { value: "Privada", label: "Privada" },
   ]);
-  const location = useLocation(); // Obtiene los parámetros de la ruta
-  const navigate = useNavigate(); // Para la navegación
-  const { dataParams } = location.state || {}; // Extrae los parámetros
 
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { dataParams } = location.state || {};
+
+  // Obtiene la lista de consultores (excluyendo al autor)
   const getConsultants = async () => {
-    await axios
-      .get("http://localhost:3004/getUsers")
-      .then((response) => {
-        const arrayResponse = response.data.filter((consultant) => consultant !== author);
-        const dataArray = arrayResponse.map((item) => ({
-          value: item.trim(),
-          label: item.trim(),
-        }));
-        setConsultants(dataArray);
-      })
-      .catch((error) => {
-        setInfo(error.response.data);
-      });
+    try {
+      const response = await axios.get("http://localhost:3004/getUsers");
+      const arrayResponse = response.data.filter(
+        (consultant) => consultant !== author
+      );
+      const dataArray = arrayResponse.map((item) => ({
+        value: item.trim(),
+        label: item.trim(),
+      }));
+      setConsultants(dataArray);
+    } catch (error) {
+      setInfo(error.response?.data || "Error al obtener consultores");
+    }
   };
 
+  // Envía datos y navega a la pantalla de grabación si la consultoría no existe
   const sendData = async () => {
-    const data = JSON.stringify({
+    const payload = JSON.stringify({
       prefix: `Consultorías TI/${nameConsultancy}`,
       bucket: bucket,
     });
-
-    await axios
-      .post("http://localhost:3002/nameFolders", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        const folderNames = response.data;
-
-        if (folderNames.includes(nameConsultancy)) {
-          setInfo("La consultoría ya existe");
-        } else {
-          navigate("/record-screen", {
-            state: {
-              dataParams: {
-                nameConsultancy: nameConsultancy,
-                author: author,
-                observationType: observationType,
-                view: view,
-                collaborators: collaborators,
-                goals: goals,
-                entity: dataParams.entity,
-                ueb: dataParams.ueb,
-                unit: dataParams.unit,
-                area: dataParams.area,
-                process: dataParams.process,
-                worker: dataParams.worker,
-                bucket: bucket,
-              },
-            },
-          });
-        }
-      })
-      .catch((error) => {
-        setInfo(error.response.data);
+    try {
+      const response = await axios.post("http://localhost:3002/nameFolders", payload, {
+        headers: { "Content-Type": "application/json" },
       });
+      const folderNames = response.data;
+      if (folderNames.includes(nameConsultancy)) {
+        setInfo("La consultoría ya existe");
+      } else {
+        navigate("/record-screen", {
+          state: {
+            dataParams: {
+              nameConsultancy,
+              author,
+              observationType,
+              view,
+              collaborators,
+              goals,
+              entity: dataParams?.entity,
+              ueb: dataParams?.ueb,
+              unit: dataParams?.unit,
+              area: dataParams?.area,
+              process: dataParams?.process,
+              worker: dataParams?.worker,
+              bucket,
+            },
+          },
+        });
+      }
+    } catch (error) {
+      setInfo(error.response?.data || "Error al enviar los datos");
+    }
   };
 
+  // Muestra el modal con un mensaje
   const setInfo = (info) => {
     setIsModalVisible(true);
     setInfoModal(info);
   };
 
+  // Obtiene información del usuario y del bucket
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -106,26 +105,20 @@ export default function CreateConsultancy() {
         })
         .then((response) => {
           setAuthor(response.data.username);
-
-          const data = JSON.stringify({
-            enterprise: response.data.enterprise,
-          });
-
+          const data = JSON.stringify({ enterprise: response.data.enterprise });
           axios
             .post("http://localhost:3004/getBucket", data, {
-              headers: {
-                "Content-Type": "application/json",
-              },
+              headers: { "Content-Type": "application/json" },
             })
             .then((response) => {
               setBucket(response.data);
             })
             .catch((error) => {
-              setInfo(error.response);
+              setInfo(error.response?.data || "Error al obtener bucket");
             });
         })
         .catch((error) => {
-          console.log(error.response.data);
+          console.log(error.response?.data);
         });
     }
   }, []);
@@ -141,7 +134,7 @@ export default function CreateConsultancy() {
         <h1 className="titleHeader">Crea observaciones</h1>
       </div>
       <div className="dataInputContainer">
-        {/* Consultancy Name Input */}
+        {/* Input para el nombre de la consultoría */}
         <div className="textInput">
           <input
             type="text"
@@ -152,29 +145,35 @@ export default function CreateConsultancy() {
           />
         </div>
 
-        {/* Observation Type Dropdown */}
+        {/* Dropdown para el tipo de observación */}
         <div className="dropDown">
           <Select
             placeholder="Selecciona un tipo de observación"
             options={observationTypeData}
-            value={observationTypeData.find((option) => option.value === observationType)}
-            onChange={(selectedOption) => setObservationType(selectedOption.value)}
+            value={
+              observationTypeData.find(
+                (option) => option.value === observationType
+              ) || null
+            }
+            onChange={(selectedOption) =>
+              setObservationType(selectedOption.value)
+            }
             className="dropDownObservationType"
           />
         </div>
 
-        {/* View Dropdown */}
+        {/* Dropdown para el tipo de visualización */}
         <div className="dropDown">
           <Select
             placeholder="Selecciona un tipo de visualización"
             options={viewData}
-            value={viewData.find((option) => option.value === view)}
+            value={viewData.find((option) => option.value === view) || null}
             onChange={(selectedOption) => setView(selectedOption.value)}
             className="dropDownView"
           />
         </div>
 
-        {/* Collaborators MultiSelect */}
+        {/* MultiSelect para colaboradores */}
         <div className="dropDown">
           <Select
             isMulti
@@ -186,28 +185,22 @@ export default function CreateConsultancy() {
           />
         </div>
 
-        {/* Goals Textarea */}
+        {/* Textarea para objetivos */}
         <div className="textInput">
           <textarea
             placeholder="Introduce los objetivos"
             value={goals.join("\n")}
             onChange={(e) => {
-              if (e.target.value.endsWith("\n")) {
-                setGoals(e.target.value.split("\n"));
-              } else {
-                setGoals(e.target.value.split("\n").filter((goal) => goal.trim() !== ""));
-              }
+              const text = e.target.value;
+              // Separamos por líneas y filtramos líneas vacías
+              const lines = text.split("\n").filter((goal) => goal.trim() !== "");
+              setGoals(lines);
             }}
             className="textInputGoals"
           />
         </div>
       </div>
-      <button
-        className="button"
-        onClick={() => {
-          sendData();
-        }}
-      >
+      <button className="button" onClick={sendData}>
         Siguiente
       </button>
       {isModalVisible && (

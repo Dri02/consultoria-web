@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useLocation, useNavigate } from "react-router"; // Para manejar la navegación y los parámetros
+import React, { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom"; // Usar react-router-dom para web
 import { FiMoreVertical, FiX } from "react-icons/fi"; // Iconos de React Icons
 import axios from "axios";
-//import "./styles/Consultancies.css"; // Estilos CSS
+import "./styles/Consultancies.css"; // Se importan los estilos CSS
 
 export default function Consultancy() {
   const [folders, setFolders] = useState([]);
@@ -21,11 +21,13 @@ export default function Consultancy() {
   const [videoUrl, setVideoUrl] = useState(null);
   const [isVideoVisible, setIsVideoVisible] = useState(false);
   const [isElementVideoVisible, setIsElementVideoVisible] = useState(false);
+
   const location = useLocation(); // Obtiene los parámetros de la ruta
   const navigate = useNavigate(); // Para la navegación
-  const { nameConsultancy, author, collaborators, user, bucket } = location.state || {}; // Extrae los parámetros
+  const { nameConsultancy, author, collaborators, user, bucket } = location.state || {};
   const iconRefs = useRef([]);
 
+  // Función para obtener los datos de las carpetas
   const getFoldersData = async () => {
     const data = JSON.stringify({
       prefix: `Consultorías TI/${nameConsultancy}/Observaciones/`,
@@ -33,73 +35,62 @@ export default function Consultancy() {
       bucket: bucket,
     });
 
-    await axios
-      .post("http://localhost:3002/getFoldersData", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        setFolders(response.data.folderNames);
-        setFolderContent(response.data.folderContent);
-        setFolderThumbnail(response.data.folderThumbnail);
-      })
-      .catch((error) => {
-        setInfo(error.response.data);
+    try {
+      const response = await axios.post("http://localhost:3002/getFoldersData", data, {
+        headers: { "Content-Type": "application/json" },
       });
+      setFolders(response.data.folderNames);
+      setFolderContent(response.data.folderContent);
+      setFolderThumbnail(response.data.folderThumbnail);
+    } catch (error) {
+      setInfo(error.response?.data || "Error al obtener datos");
+    }
   };
 
+  // Convierte una cadena de fecha en objeto Date
   const parseDateString = (dateString) => {
-    const parts = dateString.split(" ");
-    const datePart = parts[0].split("/");
-    const timePart = parts[1].split(":");
-    return new Date(
-      parseInt(datePart[2], 10),
-      parseInt(datePart[1], 10) - 1,
-      parseInt(datePart[0], 10),
-      parseInt(timePart[0], 10),
-      parseInt(timePart[1], 10),
-      parseInt(timePart[2], 10)
-    );
+    const [datePart, timePart] = dateString.split(" ");
+    const [day, month, year] = datePart.split("/").map(num => parseInt(num, 10));
+    const [hour, minute, second] = timePart.split(":").map(num => parseInt(num, 10));
+    return new Date(year, month - 1, day, hour, minute, second);
   };
 
+  // Calcula la duración entre dos fechas en formato HH:MM:SS
   const calculateDuration = (startDate, endDate) => {
     const startParts = startDate.match(/(\d+)/g);
     const endParts = endDate.match(/(\d+)/g);
 
     const start = new Date(
-      startParts[2],
-      startParts[1] - 1,
-      startParts[0],
-      startParts[3],
-      startParts[4],
-      startParts[5]
+      parseInt(startParts[2], 10),
+      parseInt(startParts[1], 10) - 1,
+      parseInt(startParts[0], 10),
+      parseInt(startParts[3], 10),
+      parseInt(startParts[4], 10),
+      parseInt(startParts[5], 10)
     );
 
     const end = new Date(
-      endParts[2],
-      endParts[1] - 1,
-      endParts[0],
-      endParts[3],
-      endParts[4],
-      endParts[5]
+      parseInt(endParts[2], 10),
+      parseInt(endParts[1], 10) - 1,
+      parseInt(endParts[0], 10),
+      parseInt(endParts[3], 10),
+      parseInt(endParts[4], 10),
+      parseInt(endParts[5], 10)
     );
 
     const durationInMillis = end - start;
-
     const seconds = Math.floor(durationInMillis / 1000);
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
 
-    const formattedHours = hours.toString().padStart(2, "0");
-    const formattedMinutes = remainingMinutes.toString().padStart(2, "0");
-    const formattedSeconds = remainingSeconds.toString().padStart(2, "0");
-
-    return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+    return `${hours.toString().padStart(2, "0")}:${remainingMinutes
+      .toString()
+      .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
+  // Muestra las opciones de descarga, eliminar y detalles
   const onIconPress = (index) => {
     const iconRef = iconRefs.current[index];
     if (iconRef) {
@@ -111,6 +102,7 @@ export default function Consultancy() {
     }
   };
 
+  // Función para descargar la carpeta (descarga del zip)
   const downloadScreen = async () => {
     const folderName = folderData[selectedItemIndex].name;
     const data = JSON.stringify({
@@ -119,30 +111,27 @@ export default function Consultancy() {
       bucket: bucket,
     });
 
-    await axios
-      .post("http://localhost:3002/downloadFolder", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+    try {
+      const response = await axios.post("http://localhost:3002/downloadFolder", data, {
+        headers: { "Content-Type": "application/json" },
         responseType: "arraybuffer",
-      })
-      .then(async (response) => {
-        setIsUpdateFolderData(true);
-        setShowOptions(false);
-
-        const blob = new Blob([response.data], { type: "application/zip" });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${folderName}.zip`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      })
-      .catch((error) => {
-        setInfo(error.response.data);
       });
+      setIsUpdateFolderData(true);
+      setShowOptions(false);
+
+      const blob = new Blob([response.data], { type: "application/zip" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${folderName}.zip`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      setInfo(error.response?.data || "Error al descargar");
+    }
   };
 
+  // Función para eliminar la carpeta
   const deleteScreen = async () => {
     const folderName = folderData[selectedItemIndex].name;
     const data = JSON.stringify({
@@ -150,87 +139,83 @@ export default function Consultancy() {
       bucket: bucket,
     });
 
-    await axios
-      .post("http://localhost:3002/deleteFile", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then(async (response) => {
-        setIsUpdateFolderData(true);
-        setShowOptions(false);
-        getFoldersData();
-      })
-      .catch((error) => {
-        setInfo(error.response.data);
+    try {
+      await axios.post("http://localhost:3002/deleteFile", data, {
+        headers: { "Content-Type": "application/json" },
       });
+      setIsUpdateFolderData(true);
+      setShowOptions(false);
+      getFoldersData();
+    } catch (error) {
+      setInfo(error.response?.data || "Error al eliminar");
+    }
   };
 
-  const detailsScreen = async () => {
+  // Navega a la pantalla de detalles con los datos necesarios
+  const detailsScreen = () => {
     setShowOptions(false);
-
     const folderName = folderData[selectedItemIndex].name;
     navigate("/details", {
       state: {
         data: {
-          user: user,
+          user,
           thumbnail: folderThumbnail[folderName],
           nameScreen: folderName,
-          nameConsultancy: nameConsultancy,
+          nameConsultancy,
           startDateScreen: folderContent[folderName]?.startDate,
           endDateScreen: folderContent[folderName]?.endDate,
           duration: calculateDuration(
             folderContent[folderName]?.startDate,
             folderContent[folderName]?.endDate
           ),
-          author: author,
-          collaborators: collaborators,
+          author,
+          collaborators,
         },
         isConsultancy: false,
       },
     });
   };
 
+  // Reproduce el video asociado a la carpeta
   const playScreen = async (nameScreen) => {
     const data = JSON.stringify({
       prefix: `Consultorías TI/${nameConsultancy}/Observaciones/${nameScreen}/screen.mp4`,
       bucket: bucket,
     });
 
-    await axios
-      .post("http://localhost:3002/fileUrl", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then(async (response) => {
-        setIsUpdateFolderData(true);
-        setVideoUrl(response.data);
-        setIsVideoVisible(true);
-      })
-      .catch((error) => {
-        setInfo(error.response.data);
+    try {
+      const response = await axios.post("http://localhost:3002/fileUrl", data, {
+        headers: { "Content-Type": "application/json" },
       });
+      setIsUpdateFolderData(true);
+      setVideoUrl(response.data);
+      setIsVideoVisible(true);
+    } catch (error) {
+      setInfo(error.response?.data || "Error al reproducir el video");
+    }
   };
 
+  // Muestra el modal de error o información
   const setInfo = (info) => {
     setIsModalVisible(true);
     setInfoModal(info);
   };
 
+  // Se obtiene la información de las carpetas al montar el componente
   useEffect(() => {
     getFoldersData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Prepara y ordena la información de las carpetas en base a la fecha de finalización
   useEffect(() => {
     const preparedFolderData = folders.map((folderName) => ({
       name: folderName,
       endDate: parseDateString(folderContent[folderName]?.endDate),
     }));
     preparedFolderData.sort((a, b) => b.endDate - a.endDate);
-
     setFolderData(preparedFolderData);
-  }, [folderThumbnail]);
+  }, [folders, folderContent]);
 
   return (
     <div className="container">
@@ -249,6 +234,7 @@ export default function Consultancy() {
                 onClick={() => {
                   setIsVideoVisible(false);
                 }}
+                className="closeButton"
               >
                 <FiX size={25} color="white" />
               </button>
@@ -258,55 +244,55 @@ export default function Consultancy() {
       )}
       <div className="scrollContainer">
         <div className="container">
-          {folderData.map((folderName, index) => (
+          {folderData.map((folderItem, index) => (
             <div
-              key={folderName.name}
+              key={folderItem.name}
               className="containerItemList"
               style={{
                 borderBottom:
                   index !== folders.length - 1 ? "1px solid #E5E5E5" : "none",
               }}
               onClick={() => {
-                playScreen(folderData[index].name);
-                setSelectedVideoName(folderData[index].name);
+                playScreen(folderItem.name);
+                setSelectedVideoName(folderItem.name);
               }}
             >
-              {folderThumbnail[folderName.name] && (
+              {folderThumbnail[folderItem.name] && (
                 <img
-                  src={`data:image/png;base64,${folderThumbnail[folderName.name]}`}
+                  src={`data:image/png;base64,${folderThumbnail[folderItem.name]}`}
                   alt="Thumbnail"
                   className="image"
                   style={{
                     border:
-                      folderData[index].name === selectedVideoName && isVideoVisible
+                      folderItem.name === selectedVideoName && isVideoVisible
                         ? "2px solid #3366FF"
                         : "none",
                   }}
                 />
               )}
               <div className="containerElementsItemList">
-                {folderContent[folderName.name] && (
+                {folderContent[folderItem.name] && (
                   <div>
                     <p className="titleHeaderElements">
-                      {folderContent[folderName.name]?.nameScreen}
+                      {folderContent[folderItem.name]?.nameScreen}
                     </p>
                     <p className="detailsElements detailsConsultancyElements">
-                      {folderContent[folderName.name]?.nameConsultancy}
+                      {folderContent[folderItem.name]?.nameConsultancy}
                     </p>
                     <div className="containerDate">
-                      {folderContent[folderName.name]?.startDate &&
-                        folderContent[folderName.name]?.endDate && (
+                      {folderContent[folderItem.name]?.startDate &&
+                        folderContent[folderItem.name]?.endDate && (
                           <>
                             <p className="detailsElements detailsDateElements">
-                              {folderContent[folderName.name]?.endDate.split(" ")[0]}
+                              {folderContent[folderItem.name]?.endDate.split(" ")[0]}
                             </p>
                             <p className="detailsElements detailsDateElements detailsSeparatorElements">
                               {" • "}
                             </p>
                             <p className="detailsElements detailsDateElements">
                               {calculateDuration(
-                                folderContent[folderName.name]?.startDate,
-                                folderContent[folderName.name]?.endDate
+                                folderContent[folderItem.name]?.startDate,
+                                folderContent[folderItem.name]?.endDate
                               )}
                             </p>
                           </>
@@ -321,13 +307,11 @@ export default function Consultancy() {
                 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (user !== author) {
-                    setIsDisableDelete(true);
-                  } else {
-                    setIsDisableDelete(false);
-                  }
+                  // Se deshabilita eliminar si el usuario actual no es el autor
+                  setIsDisableDelete(user !== author);
                   onIconPress(index);
                 }}
+                className="iconButton"
               >
                 <FiMoreVertical size={22} className="moreIcon" />
               </button>
@@ -353,38 +337,24 @@ export default function Consultancy() {
         </div>
       )}
       {showOptions && (
-        <div className="modalOptionsOut">
+        <div className="modalOptionsOut" onClick={() => setShowOptions(false)}>
           <div
             className="modalOptions"
             style={{
               top: optionsTop,
               left: optionsLeft - 130,
             }}
+            onClick={(e) => e.stopPropagation()}
           >
-            <button
-              onClick={() => {
-                downloadScreen();
-              }}
-              className="optionButton"
-            >
+            <button onClick={downloadScreen} className="optionButton">
               Descargar
             </button>
             {!isDisableDelete && (
-              <button
-                onClick={() => {
-                  deleteScreen();
-                }}
-                className="optionButton"
-              >
+              <button onClick={deleteScreen} className="optionButton">
                 Eliminar
               </button>
             )}
-            <button
-              onClick={() => {
-                detailsScreen();
-              }}
-              className="optionButton"
-            >
+            <button onClick={detailsScreen} className="optionButton">
               Detalles
             </button>
           </div>

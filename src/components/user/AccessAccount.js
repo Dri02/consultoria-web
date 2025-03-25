@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router"; // Para manejar la navegación y los parámetros
-import { FiLock, FiEye, FiEyeOff } from "react-icons/fi"; // Iconos de React Icons
+import { useLocation, useNavigate } from "react-router-dom"; // Se usa react-router-dom para la navegación
+import { FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import axios from "axios";
-import "../styles/AccessAccount.css"; // Estilos CSS
+import "../styles/AccessAccount.css";
 
 export default function AccessAccount() {
   const [password, setPassword] = useState("");
@@ -10,47 +10,50 @@ export default function AccessAccount() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [infoModal, setInfoModal] = useState("");
-  const location = useLocation(); // Obtiene los parámetros de la ruta
-  const navigate = useNavigate(); // Para la navegación
-  const { dataParams } = location.state || {}; // Extrae los parámetros
+  
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { dataParams } = location.state || {};
 
+  // Verifica que el campo contraseña no esté vacío
   const isAnyFieldEmpty = () => {
     return !password;
   };
 
+  // Función para eliminar espacios en blanco
   const removeSpace = (input) => {
     return input.replace(/\s+/g, "");
   };
 
+  // Alterna la visibilidad de la contraseña
   const handleIconPress = () => {
     setPasswordVisible(!passwordVisible);
   };
 
+  // Realiza la petición para acceder a la cuenta
   const accessAccount = async () => {
     const data = JSON.stringify({
       username: user,
       password: password,
     });
 
-    await axios
-      .post("http://localhost:3004/accessAccount", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        navigate("/update-account", { state: { data: dataParams } });
-      })
-      .catch((error) => {
-        setInfo(error.response.data);
+    try {
+      await axios.post("http://localhost:3004/accessAccount", data, {
+        headers: { "Content-Type": "application/json" },
       });
+      navigate("/update-account", { state: { data: dataParams } });
+    } catch (error) {
+      setInfo(error.response?.data || "Error al conectar con el servidor");
+    }
   };
 
+  // Muestra el modal con el mensaje recibido
   const setInfo = (info) => {
     setIsModalVisible(true);
     setInfoModal(info);
   };
 
+  // Al montar el componente, se intenta recuperar el token y obtener la información del usuario
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -65,7 +68,7 @@ export default function AccessAccount() {
           setUser(response.data.username);
         })
         .catch((error) => {
-          setInfo(error.response.data);
+          setInfo(error.response?.data || "Error al recuperar información");
         });
     }
   }, []);
@@ -85,7 +88,7 @@ export default function AccessAccount() {
             onChange={(e) => setPassword(removeSpace(e.target.value))}
             className="textInput"
           />
-          <button onClick={handleIconPress} className="passwordVisibilityToggle">
+          <button type="button" onClick={handleIconPress} className="passwordVisibilityToggle">
             {passwordVisible ? <FiEye size={22} /> : <FiEyeOff size={22} />}
           </button>
         </div>

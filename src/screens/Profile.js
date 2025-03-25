@@ -1,24 +1,21 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // Importa useNavigate
-import { FaUser } from "react-icons/fa"; // Icono de usuario
-import "./styles/Profile.css"; // Estilos CSS
+import { useLocation, useNavigate } from "react-router-dom";
+import { FaUser } from "react-icons/fa";
+import "./styles/Profile.css";
 
 export default function Profile() {
-  const location = useLocation(); // Obtiene los parámetros de la ruta
-  const navigate = useNavigate(); // Para redirigir al usuario
-  const { data } = location.state || {}; // Extrae los datos
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { data } = location.state || {};
 
-  // Si no hay datos, muestra un mensaje
+  // Si no se encuentran datos, muestra un mensaje y botón para volver
   if (!data) {
     return (
       <div className="container">
         <div className="header">
           <h1 className="titleHeader">No se encontraron datos del perfil.</h1>
         </div>
-        <button
-          onClick={() => navigate(-1)} // Redirige a la página anterior
-          className="backButton"
-        >
+        <button onClick={() => navigate(-1)} className="backButton">
           Volver
         </button>
       </div>
@@ -54,10 +51,7 @@ export default function Profile() {
           <p className="valueDetailItem">{data.email}</p>
         </div>
       </div>
-      <button
-        onClick={() => navigate(-1)} // Redirige a la página anterior
-        className="backButton"
-      >
+      <button onClick={() => navigate(-1)} className="backButton">
         Volver
       </button>
     </div>

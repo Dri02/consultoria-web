@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useLocation, useNavigate } from "react-router"; // Para manejar la navegación y los parámetros
-import { IoReload, IoStop, IoPause, IoPlay } from "react-icons/io5"; // Iconos de React Icons
+import { useLocation, useNavigate } from "react-router";
+import { IoReload, IoStop, IoPause, IoPlay } from "react-icons/io5";
 import io from "socket.io-client";
 import axios from "axios";
-//import "./styles/RecordScreen.css"; // Estilos CSS
+import "./styles/RecordScreen.css";
 
-export default function Consultancy() {
+export default function RecordScreen() {
   const socket = io.connect("http://localhost:3001");
   const [isStartedRequest, setIsStartedRequest] = useState(false);
   const [isPlayedRequest, setIsPlayedRequest] = useState(false);
@@ -31,22 +31,24 @@ export default function Consultancy() {
   const [state, setState] = useState("");
   const [nameScreen, setNameScreen] = useState("");
   const nameScreenRef = useRef(nameScreen);
-  const location = useLocation(); // Obtiene los parámetros de la ruta
-  const navigate = useNavigate(); // Para la navegación
-  const { dataParams } = location.state || {}; // Extrae los parámetros
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { dataParams } = location.state || {};
 
+  // Función para formatear el tiempo en hh:mm:ss
   const formatTime = (time) => {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
     const seconds = time % 60;
-
-    return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+    return `${hours < 10 ? "0" + hours : hours}:${
+      minutes < 10 ? "0" + minutes : minutes
+    }:${seconds < 10 ? "0" + seconds : seconds}`;
   };
 
   const start = async () => {
     setIsStartedRequest(true);
-    setIsPlayedRequest(!isPlayedRequest);
-    setIsPausedRequest(!isPausedRequest);
+    setIsPlayedRequest((prev) => !prev);
+    setIsPausedRequest((prev) => !prev);
   };
 
   const stop = async () => {
@@ -64,26 +66,21 @@ export default function Consultancy() {
       bucket: dataParams.bucket,
     });
 
-    await axios
-      .post("http://localhost:3002/nameFolders", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then(async (response) => {
-        const folderNames = response.data;
-
-        if (folderNames.includes(nameScreenRef.current)) {
-          setInfo("La observación ya existe");
-          setIsModalSaveVisible(false);
-        } else {
-          setIsDiscarded(false);
-          setIsStartedRequest(false);
-        }
-      })
-      .catch((error) => {
-        setInfo(error.response.data);
+    try {
+      const response = await axios.post("http://localhost:3002/nameFolders", data, {
+        headers: { "Content-Type": "application/json" },
       });
+      const folderNames = response.data;
+      if (folderNames.includes(nameScreenRef.current)) {
+        setInfo("La observación ya existe");
+        setIsModalSaveVisible(false);
+      } else {
+        setIsDiscarded(false);
+        setIsStartedRequest(false);
+      }
+    } catch (error) {
+      setInfo(error.response?.data || "Error en la subida");
+    }
   };
 
   const finish = async () => {
@@ -132,8 +129,8 @@ export default function Consultancy() {
 
   const startResponse = useCallback(() => {
     setIsStartedResponse(true);
-    setIsPlayedResponse(!isPlayedResponse);
-    setIsPausedResponse(!isPausedResponse);
+    setIsPlayedResponse((prev) => !prev);
+    setIsPausedResponse((prev) => !prev);
   }, [isPlayedResponse, isPausedResponse]);
 
   const discardResponse = useCallback(() => {
@@ -169,13 +166,11 @@ export default function Consultancy() {
 
   useEffect(() => {
     let intervalId;
-
     if (isPlayedResponse) {
       intervalId = setInterval(() => {
         setTimer((prevTimer) => prevTimer + 1);
       }, 1000);
     }
-
     return () => {
       clearInterval(intervalId);
     };
@@ -202,15 +197,16 @@ export default function Consultancy() {
   }, [isStartedRequest]);
 
   useEffect(() => {
-    let currentDate = new Date();
+    const currentDate = new Date();
     let hour = currentDate.getHours();
     let minute = currentDate.getMinutes();
     let second = currentDate.getSeconds();
     let formattedHour = hour > 12 ? hour - 12 : hour;
     let period = hour >= 12 ? "p.m." : "a.m.";
-    let formattedDate = `${currentDate.getDate().toString().padStart(2, "0")}/${(
-      currentDate.getMonth() + 1
-    )
+    let formattedDate = `${currentDate
+      .getDate()
+      .toString()
+      .padStart(2, "0")}/${(currentDate.getMonth() + 1)
       .toString()
       .padStart(2, "0")}/${currentDate.getFullYear()} ${formattedHour
       .toString()
@@ -221,18 +217,15 @@ export default function Consultancy() {
     if (isStartedResponse) {
       setStartDate(formattedDate);
       startDateRef.current = formattedDate;
-
       if (!isStartedConsultancy) {
         setIsStartedConsultancy(true);
         setStartDateConsultancy(formattedDate);
         startDateConsultancyRef.current = formattedDate;
       }
     } else {
-      if (isStartedConsultancy) {
-        if (!isDiscarded) {
-          setEndDateConsultancy(formattedDate);
-          endDateConsultancyRef.current = formattedDate;
-        }
+      if (isStartedConsultancy && !isDiscarded) {
+        setEndDateConsultancy(formattedDate);
+        endDateConsultancyRef.current = formattedDate;
       }
     }
 
@@ -240,7 +233,7 @@ export default function Consultancy() {
       setEndDate(formattedDate);
       endDateRef.current = formattedDate;
     }
-  }, [isStartedResponse, isPausedResponse]);
+  }, [isStartedResponse, isPausedResponse, isStartedConsultancy, isDiscarded]);
 
   useEffect(() => {
     socket.on("started_record", startResponse);
@@ -255,7 +248,6 @@ export default function Consultancy() {
     return () => {
       socket.off("started_record", startResponse);
       socket.off("paused_record", startResponse);
-
       if (isDiscarded) {
         socket.off("stopped_record", discardResponse);
       } else {
@@ -267,20 +259,23 @@ export default function Consultancy() {
   return (
     <div className="container">
       <div className="counter">
-        {isStartedResponse && <p className="counterText">{formatTime(timer)}</p>}
+        {isStartedResponse && (
+          <p className="counterText">{formatTime(timer)}</p>
+        )}
       </div>
       <div className="containerControls">
         <div className="controls">
           {isStartedResponse && isPausedResponse && (
-            <button
-              className="secondControl reloadControl"
-              onClick={discard}
-            >
+            <button className="secondControl reloadControl" onClick={discard}>
               <IoReload size={20} />
             </button>
           )}
           <button className="principalControl" onClick={start}>
-            {isPlayedResponse ? <IoPause size={30} /> : <div className="playControl" />}
+            {isPlayedResponse ? (
+              <IoPause size={30} />
+            ) : (
+              <div className="playControl" />
+            )}
           </button>
           {isStartedResponse && isPausedResponse && (
             <button className="secondControl stopControl" onClick={stop}>
@@ -291,7 +286,9 @@ export default function Consultancy() {
         {isModalSaveVisible && (
           <div className="modalInfoOut">
             <div className="modalInfo">
-              <p className="modalInfoTextHeader">¿Desea guardar la grabación?</p>
+              <p className="modalInfoTextHeader">
+                ¿Desea guardar la grabación?
+              </p>
               <div className="textInputContainer">
                 <input
                   type="text"
@@ -326,7 +323,9 @@ export default function Consultancy() {
         {isModalFinishVisible && (
           <div className="modalInfoOut">
             <div className="modalInfo">
-              <p className="modalInfoTextHeader">¿Desea finalizar la consultoría?</p>
+              <p className="modalInfoTextHeader">
+                ¿Desea finalizar la consultoría?
+              </p>
               <div className="containerModalInfoButton">
                 <button
                   className="modalInfoButton"
@@ -334,7 +333,9 @@ export default function Consultancy() {
                 >
                   Continuar
                 </button>
-                <span className="separatorOptions separatorOptionsFinish">|</span>
+                <span className="separatorOptions separatorOptionsFinish">
+                  |
+                </span>
                 <button className="modalInfoButton" onClick={finish}>
                   Finalizar
                 </button>

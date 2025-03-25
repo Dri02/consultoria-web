@@ -1,56 +1,46 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router"; // Para manejar la navegación y los parámetros
-import { FiFolder, FiChevronUp, FiChevronDown } from "react-icons/fi"; // Iconos de React Icons
+import { useLocation, useNavigate } from "react-router";
+import { FiFolder } from "react-icons/fi";
 import axios from "axios";
-//import "./styles/UpdateDetails.css"; // Estilos CSS
+import "./styles/UpdateDetails.css";
 
 export default function UpdateDetails() {
   const [nameScreen, setNameScreen] = useState("");
   const [nameConsultancy, setNameConsultancy] = useState("");
   const [goals, setGoals] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [infoModal, setInfoModal] = useState("");
+  const [infoModal] = useState("");
   const [folders, setFolders] = useState([]);
-  const location = useLocation(); // Obtiene los parámetros de la ruta
-  const navigate = useNavigate(); // Para la navegación
-  const { data, isConsultancy } = location.state || {}; // Extrae los parámetros
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { data, isConsultancy } = location.state || {};
 
   const sendUpdate = async (newData) => {
-    await axios
-      .post("http://localhost:3002/modifyJson", newData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then(async (response) => {
-        if (isConsultancy) {
-          folders.map(async (folderName) => {
-            const sendData = JSON.stringify({
-              prefix: `Consultorías TI/${nameConsultancy}/Observaciones/${folderName}/`,
-              modifications: [{ field: "nameConsultancy", value: nameConsultancy }],
-              notRecursive: false,
-            });
-
-            await axios
-              .post("http://localhost:3002/modifyJson", sendData, {
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              })
-              .then(async (response) => {
-                navigate("/home");
-              })
-              .catch((error) => {
-                console.log(error.response.data);
-              });
-          });
-        }
-
-        navigate("/home");
-      })
-      .catch((error) => {
-        setInfo(error.response.data);
+    try {
+      await axios.post("http://localhost:3002/modifyJson", newData, {
+        headers: { "Content-Type": "application/json" },
       });
+      if (isConsultancy) {
+        folders.map(async (folderName) => {
+          const sendData = JSON.stringify({
+            prefix: `Consultorías TI/${nameConsultancy}/Observaciones/${folderName}/`,
+            modifications: [{ field: "nameConsultancy", value: nameConsultancy }],
+            notRecursive: false,
+          });
+          try {
+            await axios.post("http://localhost:3002/modifyJson", sendData, {
+              headers: { "Content-Type": "application/json" },
+            });
+            navigate("/home");
+          } catch (error) {
+            console.log(error.response.data);
+          }
+        });
+      }
+      navigate("/home");
+    } catch (error) {
+      setInfo(error.response.data);
+    }
   };
 
   const updateDetails = async () => {
@@ -60,55 +50,50 @@ export default function UpdateDetails() {
         : `Consultorías TI/${data.nameConsultancy}/Observaciones/${nameScreen}`,
     });
 
-    await axios
-      .post("http://localhost:3002/nameFolders", verifyData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then(async (response) => {
-        const newData = JSON.stringify({
-          prefix: isConsultancy
-            ? `Consultorías TI/${data.nameConsultancy}/`
-            : `Consultorías TI/${data.nameConsultancy}/Observaciones/${data.nameScreen}/`,
-          modifications: isConsultancy
-            ? [
-                { field: "nameConsultancy", value: nameConsultancy },
-                { field: "goals", value: goals },
-              ]
-            : [{ field: "nameScreen", value: nameScreen }],
-          notRecursive: true,
-        });
-        const folderNames = response.data;
-
+    try {
+      const response = await axios.post("http://localhost:3002/nameFolders", verifyData, {
+        headers: { "Content-Type": "application/json" },
+      });
+      const newData = JSON.stringify({
+        prefix: isConsultancy
+          ? `Consultorías TI/${data.nameConsultancy}/`
+          : `Consultorías TI/${data.nameConsultancy}/Observaciones/${data.nameScreen}/`,
+        modifications: isConsultancy
+          ? [
+              { field: "nameConsultancy", value: nameConsultancy },
+              { field: "goals", value: goals },
+            ]
+          : [{ field: "nameScreen", value: nameScreen }],
+        notRecursive: true,
+      });
+      const folderNames = response.data;
+      if (
+        isConsultancy
+          ? data.nameConsultancy !== nameConsultancy
+          : data.nameScreen !== nameScreen
+      ) {
         if (
           isConsultancy
-            ? data.nameConsultancy !== nameConsultancy
-            : data.nameScreen !== nameScreen
+            ? folderNames.includes(nameConsultancy)
+            : folderNames.includes(nameScreen)
         ) {
-          if (
-            isConsultancy
-              ? folderNames.includes(nameConsultancy)
-              : folderNames.includes(nameScreen)
-          ) {
-            isConsultancy
-              ? setInfo("La consultoría ya existe")
-              : setInfo("La observación ya existe");
-          } else {
-            sendUpdate(newData);
-          }
+          isConsultancy
+            ? setInfo("La consultoría ya existe")
+            : setInfo("La observación ya existe");
         } else {
           sendUpdate(newData);
         }
-      })
-      .catch((error) => {
-        setInfo(error.response.data);
-      });
+      } else {
+        sendUpdate(newData);
+      }
+    } catch (error) {
+      setInfo(error.response.data);
+    }
   };
 
   const setInfo = (info) => {
     setIsModalVisible(true);
-    setInfoModal(info);
+    setInfo(info);
   };
 
   useEffect(() => {
@@ -118,6 +103,7 @@ export default function UpdateDetails() {
     } else {
       setNameScreen(data.nameScreen);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -125,20 +111,19 @@ export default function UpdateDetails() {
       const sendData = JSON.stringify({
         prefix: `Consultorías TI/${data.nameConsultancy}/Observaciones/`,
       });
-
       axios
         .post("http://localhost:3002/nameFolders", sendData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         })
         .then((response) => {
           setFolders(response.data);
         })
         .catch((error) => {
           setInfo(error.response.data);
+          setIsModalVisible(true);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -186,12 +171,7 @@ export default function UpdateDetails() {
           </div>
         )}
       </div>
-      <button
-        className="button"
-        onClick={() => {
-          updateDetails();
-        }}
-      >
+      <button className="button" onClick={updateDetails}>
         Actualizar
       </button>
       {isModalVisible && (

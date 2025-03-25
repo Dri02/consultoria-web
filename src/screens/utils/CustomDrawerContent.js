@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router"; // Para manejar la navegación
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Para manejar la navegación
 import { FiUser, FiLogOut, FiInfo } from "react-icons/fi"; // Iconos de React Icons
-import { IoMoon, IoSunny } from "react-icons/io5"; // Iconos de React Icons
+import { IoMoon, IoSunny } from "react-icons/io5"; // Iconos para el tema
 import axios from "axios";
 import "../styles/CustomDrawerContent.css"; // Estilos CSS
 
-export default function Drawer({ navigation }) {
+export default function Drawer() {
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
   const [user, setUser] = useState("");
@@ -14,17 +14,18 @@ export default function Drawer({ navigation }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [infoModal, setInfoModal] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
+
   const navigate = useNavigate(); // Para la navegación
 
-  const detailsAccount = async () => {
+  const detailsAccount = () => {
     navigate("/profile", {
       state: {
         data: {
-          name: name,
-          lastname: lastname,
-          user: user,
-          email: email,
-          photo: photo,
+          name,
+          lastname,
+          user,
+          email,
+          photo,
         },
       },
     });
@@ -39,7 +40,7 @@ export default function Drawer({ navigation }) {
     const token = localStorage.getItem("token");
     if (token) {
       axios
-        .get("http:/localhost:3004/me", {
+        .get("http://localhost:3004/me", {
           headers: {
             "Content-Type": "application/json",
             "x-access-token": token,
@@ -53,7 +54,7 @@ export default function Drawer({ navigation }) {
           setPhoto(response.data.photo);
         })
         .catch((error) => {
-          setInfo(error.response.data);
+          setInfo(error.response?.data || "Error al obtener información");
         });
     }
   }, []);
@@ -108,7 +109,9 @@ export default function Drawer({ navigation }) {
         <button
           className="menuOption"
           onClick={() =>
-            setInfo("ConsulTorIa\n\nHerramienta para la gestión de observaciones para equipos de Consultoria TI")
+            setInfo(
+              "ConsulTorIa\n\nHerramienta para la gestión de observaciones para equipos de Consultoria TI"
+            )
           }
         >
           <FiInfo size={24} />

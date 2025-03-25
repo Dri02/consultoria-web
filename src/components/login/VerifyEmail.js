@@ -1,76 +1,71 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router"; // Para manejar la navegación y los parámetros
-import { FiLock } from "react-icons/fi"; // Iconos de Feather
+import { useLocation, useNavigate } from "react-router-dom"; // Se usa react-router-dom para la navegación
+import { FiLock } from "react-icons/fi"; // Icono de Feather
 import axios from "axios";
-import "../styles/VerifyEmail.css"; // Estilos CSS
+import "../styles/VerifyEmail.css"; // Se importan los estilos CSS
 
 export default function VerifyEmail() {
   const [code, setCode] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [infoModal, setInfoModal] = useState("");
-  const location = useLocation(); // Obtiene los parámetros de la ruta
-  const navigate = useNavigate(); // Para la navegación
-  const { email, role, data } = location.state || {}; // Extrae los parámetros
+  
+  // Extrae parámetros de la ruta (email, role y data)
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { email, role, data } = location.state || {};
 
+  // Verifica que el campo código no esté vacío
   const isAnyFieldEmpty = () => {
     return !code;
   };
 
+  // Función para mostrar el modal con la información recibida (éxito o error)
+  const setInfo = (info) => {
+    setIsModalVisible(true);
+    setInfoModal(info);
+  };
+
+  // Función principal para verificar el código y realizar la acción según el role
   const verifyEmail = async () => {
-    const temp = JSON.stringify({
+    const payload = JSON.stringify({
       email: email,
       code: code,
     });
 
     try {
-      const response = await axios.post("http://localhost:3004/verifyCode", temp, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await axios.post("http://localhost:3004/verifyCode", payload, {
+        headers: { "Content-Type": "application/json" },
       });
       setInfo(response.data);
 
       if (role === "register") {
-        await axios
-          .post("http://localhost:3004/signup", data, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          })
-          .then((response) => {
-            const { auth, token } = response.data;
-            if (auth) {
-              navigate("/"); // Navega a la página de inicio de sesión
-            }
-          });
+        await axios.post("http://localhost:3004/signup", data, {
+          headers: { "Content-Type": "application/json" },
+        }).then((response) => {
+          const { auth } = response.data;
+          if (auth) {
+            navigate("/"); // Navega a la página de inicio de sesión
+          }
+        });
       } else if (role === "recover") {
         navigate("/new-password", { state: { email: email } }); // Navega a la página de nueva contraseña
       } else if (role === "update") {
-        await axios
-          .post("http://localhost:3004/updateAccount", data, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((response) => {
-            setInfo(response.data);
-            navigate("/"); // Navega a la página de inicio de sesión
-          });
+        await axios.post("http://localhost:3004/updateAccount", data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        }).then((response) => {
+          setInfo(response.data);
+          navigate("/"); // Navega a la página de inicio de sesión
+        });
       }
     } catch (error) {
       setInfo(error.response ? error.response.data : "Error al conectar con el servidor");
     }
   };
 
-  const setInfo = (info) => {
-    setIsModalVisible(true);
-    setInfoModal(info);
-  };
-
   return (
     <div className="container">
       <div className="header">
-        <FiLock size={48} className="recoverIcon" /> {/* Usa un ícono o un componente de ícono */}
+        <FiLock size={48} className="recoverIcon" />
         <h1 className="titleHeader">Verifica tu correo</h1>
       </div>
       <div className="textInputContainer">

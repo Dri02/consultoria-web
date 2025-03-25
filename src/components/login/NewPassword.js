@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // Para manejar la navegación y los parámetros
+import { useLocation, useNavigate } from "react-router-dom"; // Manejo de navegación y parámetros
 import { FiLock, FiEye, FiEyeOff } from "react-icons/fi"; // Iconos de Feather
 import axios from "axios";
 import "../styles/NewPassword.css"; // Estilos CSS
@@ -11,7 +11,7 @@ export default function NewPassword() {
   const [infoModal, setInfoModal] = useState("");
   const location = useLocation(); // Obtiene los parámetros de la ruta
   const navigate = useNavigate(); // Para la navegación
-  const { email } = location.state || {}; // Extrae los parámetros
+  const { email } = location.state || {}; // Extrae el email de los parámetros
 
   const handleIconPress = () => {
     setPasswordVisible(!passwordVisible);
@@ -36,7 +36,9 @@ export default function NewPassword() {
       setInfo(response.data);
       navigate("/"); // Navega a la página de inicio de sesión
     } catch (error) {
-      setInfo(error.response ? error.response.data : "Error al conectar con el servidor");
+      setInfo(
+        error.response ? error.response.data : "Error al conectar con el servidor"
+      );
     }
   };
 
@@ -48,7 +50,7 @@ export default function NewPassword() {
   return (
     <div className="container">
       <div className="header">
-        <FiLock size={48} className="passwordIcon" /> {/* Usa un ícono o un componente de ícono */}
+        <FiLock size={48} className="passwordIcon" /> {/* Ícono representativo */}
         <h1 className="titleHeader">Cambia tu contraseña</h1>
       </div>
       <div className="textInputContainer">
@@ -68,10 +70,7 @@ export default function NewPassword() {
           </button>
         </div>
       </div>
-      <button
-        className="button"
-        onClick={newPassword}
-      >
+      <button className="button" onClick={newPassword}>
         Aceptar
       </button>
       <div className="textContainer">
@@ -83,8 +82,8 @@ export default function NewPassword() {
         </div>
       </div>
       {isModalVisible && (
-        <div className="modalInfoOut">
-          <div className="modalInfo">
+        <div className="modalInfoOut" onClick={() => setIsModalVisible(false)}>
+          <div className="modalInfo" onClick={(e) => e.stopPropagation()}>
             <p className="modalInfoTextHeader">{infoModal}</p>
             <div className="containerModalInfoButton">
               <button

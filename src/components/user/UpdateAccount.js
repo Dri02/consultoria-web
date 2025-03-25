@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router"; // Para manejar la navegación y los parámetros
+import { useLocation, useNavigate } from "react-router-dom"; // Para la navegación y los parámetros
 import { FiCamera, FiEye, FiEyeOff } from "react-icons/fi"; // Iconos de Feather
 import { motion } from "framer-motion"; // Para animaciones
 import axios from "axios";
@@ -17,59 +17,72 @@ export default function UpdateAccount() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [infoModal, setInfoModal] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
+
   const location = useLocation(); // Obtiene los parámetros de la ruta
   const navigate = useNavigate(); // Para la navegación
   const { data } = location.state || {}; // Extrae los parámetros
 
+  // Verifica que ninguno de los campos requeridos esté vacío
   const isAnyFieldEmpty = () => {
     return !name || !lastname || !user || !email || !password;
   };
 
+  // Formatea la entrada (ej. nombres y apellidos)
   const correctInput = (input) => {
     return input
       .toLowerCase()
-      .replace(/\s+/g, ' ')
-      .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+      .replace(/\s+/g, " ")
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
+  // Elimina espacios en blanco
   const removeSpace = (input) => {
-    return input.replace(/\s+/g, '');
+    return input.replace(/\s+/g, "");
   };
 
+  // Corrige la entrada de correo a minúsculas sin espacios
   const correctEmail = (input) => {
-    return input.toLowerCase().replace(/\s+/g, '');
+    return input.toLowerCase().replace(/\s+/g, "");
   };
 
+  // Alterna la visibilidad de la contraseña
   const handleIconPress = () => {
     setPasswordVisible(!passwordVisible);
   };
 
+  // Abre el selector de imagen utilizando un input file creado dinámicamente
   const openImagePicker = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
     input.onchange = (e) => {
       const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhoto(reader.result.split(',')[1]);
-      };
-      reader.readAsDataURL(file);
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          // Se extrae la parte base64 eliminando el prefijo "data:image/png;base64,"
+          setPhoto(reader.result.split(",")[1]);
+        };
+        reader.readAsDataURL(file);
+      }
     };
     input.click();
   };
 
+  // Envía la solicitud para actualizar la cuenta. Primero se verifica el correo y luego se navega a la verificación.
   const updateAccount = async () => {
-    const data = JSON.stringify({
+    // Datos para la verificación del correo
+    const dataPayload = JSON.stringify({
       username: user,
       email: email,
       olduser: olduser,
-      oldemail: oldemail
+      oldemail: oldemail,
     });
-    const formData = new FormData();
 
+    // Se prepara un formData para enviar todos los campos, incluida la foto
+    const formData = new FormData();
     formData.append("name", name);
     formData.append("lastname", lastname);
     formData.append("username", user);
@@ -78,29 +91,28 @@ export default function UpdateAccount() {
     formData.append("photo", photo);
     formData.append("olduser", olduser);
 
-    await axios.post("http://localhost:3004/verifyEmailUpdate", data, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    }).then(response => {
-        setInfo(response.data);
-        navigate("/verify-email", {
-          state: {
-            email: email,
-            role: 'update',
-            data: formData
-          }
-        });
-    }).catch(error => {
-      setInfo(error.response ? error.response.data : "Error al conectar con el servidor");
-    });
+    try {
+      const response = await axios.post("http://localhost:3004/verifyEmailUpdate", dataPayload, {
+        headers: { "Content-Type": "application/json" },
+      });
+      setInfo(response.data);
+      navigate("/verify-email", {
+        state: { email: email, role: "update", data: formData },
+      });
+    } catch (error) {
+      setInfo(
+        error.response ? error.response.data : "Error al conectar con el servidor"
+      );
+    }
   };
 
+  // Muestra el modal con un mensaje
   const setInfo = (info) => {
     setIsModalVisible(true);
     setInfoModal(info);
   };
 
+  // Al montar el componente, se inicializan los valores a partir de los datos recibidos
   useEffect(() => {
     if (data) {
       setName(data.name);
@@ -134,7 +146,7 @@ export default function UpdateAccount() {
       <div className="textInputContainer">
         <motion.div
           className="textInput"
-          whileFocus={{ borderBottomColor: 'blue', borderBottomWidth: 2 }}
+          whileFocus={{ borderBottomColor: "blue", borderBottomWidth: 2 }}
         >
           <input
             type="text"
@@ -146,7 +158,7 @@ export default function UpdateAccount() {
         </motion.div>
         <motion.div
           className="textInput"
-          whileFocus={{ borderBottomColor: 'blue', borderBottomWidth: 2 }}
+          whileFocus={{ borderBottomColor: "blue", borderBottomWidth: 2 }}
         >
           <input
             type="text"
@@ -158,7 +170,7 @@ export default function UpdateAccount() {
         </motion.div>
         <motion.div
           className="textInput"
-          whileFocus={{ borderBottomColor: 'blue', borderBottomWidth: 2 }}
+          whileFocus={{ borderBottomColor: "blue", borderBottomWidth: 2 }}
         >
           <input
             type="text"
@@ -170,7 +182,7 @@ export default function UpdateAccount() {
         </motion.div>
         <motion.div
           className="textInput"
-          whileFocus={{ borderBottomColor: 'blue', borderBottomWidth: 2 }}
+          whileFocus={{ borderBottomColor: "blue", borderBottomWidth: 2 }}
         >
           <input
             type="email"
@@ -182,7 +194,7 @@ export default function UpdateAccount() {
         </motion.div>
         <motion.div
           className="textInput"
-          whileFocus={{ borderBottomColor: 'blue', borderBottomWidth: 2 }}
+          whileFocus={{ borderBottomColor: "blue", borderBottomWidth: 2 }}
         >
           <input
             type={passwordVisible ? "text" : "password"}
@@ -191,7 +203,11 @@ export default function UpdateAccount() {
             maxLength={20}
             onChange={(e) => setPassword(removeSpace(e.target.value))}
           />
-          <button className="passwordVisibilityToggle" onClick={handleIconPress}>
+          <button
+            type="button"
+            className="passwordVisibilityToggle"
+            onClick={handleIconPress}
+          >
             {passwordVisible ? <FiEye size={22} /> : <FiEyeOff size={22} />}
           </button>
         </motion.div>

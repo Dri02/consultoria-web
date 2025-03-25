@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router"; // Para manejar la navegación
+import { useNavigate } from "react-router"; // Para la navegación
 import { FiLock } from "react-icons/fi"; // Iconos de Feather
 import axios from "axios";
-import "../styles/ForgetPassword.css"; // Estilos CSS
+import "../styles/ForgetPassword.css"; // Importa los estilos CSS
 
 export default function ForgetPassword() {
   const [email, setEmail] = useState("");
@@ -11,11 +11,11 @@ export default function ForgetPassword() {
   const navigate = useNavigate(); // Para la navegación
 
   const handleFocus = () => {
-    // Animación de enfoque (puedes usar CSS para esto)
+    // Puedes manejar la animación de enfoque con CSS (por ejemplo, :focus)
   };
 
   const handleBlur = () => {
-    // Animación de desenfoque (puedes usar CSS para esto)
+    // Puedes manejar la animación de desenfoque con CSS (por ejemplo, :not(:focus))
   };
 
   const forgetPassword = async () => {
@@ -36,7 +36,11 @@ export default function ForgetPassword() {
       setInfo(response.data);
       navigate("/verify-email", { state: { email: email, role: "recover" } });
     } catch (error) {
-      setInfo(error.response ? error.response.data : "Error al conectar con el servidor");
+      setInfo(
+        error.response
+          ? error.response.data
+          : "Error al conectar con el servidor"
+      );
     }
   };
 
@@ -48,7 +52,7 @@ export default function ForgetPassword() {
   return (
     <div className="container">
       <div className="header">
-        <FiLock size={48} className="recoverIcon" /> {/* Usa un ícono o un componente de ícono */}
+        <FiLock size={48} className="recoverIcon" />
         <h1 className="titleHeader">Recupera tu cuenta</h1>
       </div>
       <div className="textInputContainer">
@@ -65,10 +69,7 @@ export default function ForgetPassword() {
           className="textInput"
         />
       </div>
-      <button
-        className="button"
-        onClick={forgetPassword}
-      >
+      <button className="button" onClick={forgetPassword}>
         Enviar
       </button>
       <div className="textContainer">
@@ -80,8 +81,8 @@ export default function ForgetPassword() {
         </div>
       </div>
       {isModalVisible && (
-        <div className="modalInfoOut">
-          <div className="modalInfo">
+        <div className="modalInfoOut" onClick={() => setIsModalVisible(false)}>
+          <div className="modalInfo" onClick={(e) => e.stopPropagation()}>
             <p className="modalInfoTextHeader">{infoModal}</p>
             <div className="containerModalInfoButton">
               <button

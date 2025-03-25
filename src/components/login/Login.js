@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router"
+import { useNavigate } from "react-router";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import { FiLock } from "react-icons/fi"; // Iconos de Feather
 import axios from "axios";
 import "../styles/Login.css"; // Importa el archivo CSS
@@ -19,28 +20,28 @@ export default function Login() {
   const login = async () => {
     const data = JSON.stringify({
       username: user,
-      password: password
+      password: password,
     });
-  
+
     try {
       const response = await axios.post("http://localhost:3004/signin", data, {
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
       });
-  
+
       const { auth, token } = response.data;
-  
+
       if (auth) {
         // Usar localStorage para guardar el token en la web
-        localStorage.setItem('token', token);
-        console.log('Token guardado exitosamente');
-  
+        localStorage.setItem("token", token);
+        console.log("Token guardado exitosamente");
+
         setInfo(`Bienvenido ${user} a ConsulTorIa`);
-        navigate("/");
+        navigate("home");
       }
     } catch (error) {
-      setInfo(error.response?.data || 'Error en la solicitud');
+      setInfo(error.response?.data || "Error en la solicitud");
     }
   };
 
@@ -56,8 +57,8 @@ export default function Login() {
   return (
     <div className="container">
       <div className="header">
-          <FiLock size={30} className="lockIcon" /> {/* Usa un ícono o un componente de ícono */}
-          <h1 className="titleHeader">Inicia sesión</h1>
+        <FiLock size={30} className="lockIcon" /> {/* Ícono de bloqueo */}
+        <h1 className="titleHeader">Inicia sesión</h1>
       </div>
       <div className="textInputContainer">
         <input
@@ -67,7 +68,7 @@ export default function Login() {
           onChange={(e) => setUser(e.target.value)}
           className="textInput"
         />
-        <div style={{ position: "relative" }}>
+        <div className="passwordInputContainer">
           <input
             type={passwordVisible ? "text" : "password"}
             placeholder="Introduce tu contraseña"
@@ -79,19 +80,20 @@ export default function Login() {
             onClick={handleIconPress}
             className="passwordVisibilityToggle"
           >
-            {passwordVisible ? "👁️" : "👁️‍🗨️"}
+            {passwordVisible ? <FiEye /> : <FiEyeOff />}
           </button>
         </div>
       </div>
-      <button className="button" disabled={isAnyFieldEmpty()} onClick={login}>
+      <button
+        className="button"
+        disabled={isAnyFieldEmpty()}
+        onClick={login}
+      >
         Continuar
       </button>
       <div className="signupContainer">
         <p>¿No tienes cuenta?</p>
-        <button
-          onClick={() => navigate("/register")}
-          className="linkText"
-        >
+        <button onClick={() => navigate("/register")} className="linkText">
           Regístrate aquí
         </button>
       </div>

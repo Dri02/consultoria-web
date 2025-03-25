@@ -39,18 +39,18 @@ body {
   width: 100%;
   max-width: 300px;
   margin-bottom: 20px;
-  position: relative; /* Para posicionar el botón de visibilidad */
+  position: relative;
 }
 
 .textInput {
   width: 100%;
-  padding: 10px; /* Mismo padding que el botón */
+  padding: 10px;
   margin-bottom: 15px;
   border: 1px solid #ccc;
-  border-radius: 7px; /* Mismo border-radius que el botón */
-  font-size: 16px; /* Mismo font-size que el botón */
-  height: 40px; /* Altura fija para igualar el botón */
-  box-sizing: border-box; /* Asegura que el padding no afecte el tamaño total */
+  border-radius: 7px;
+  font-size: 16px;
+  height: 40px; /* Altura fija para igualar los botones */
+  box-sizing: border-box;
 }
 
 .textInput:focus {
@@ -58,16 +58,23 @@ body {
   outline: none;
 }
 
+/* Contenedor para el input de contraseña y su botón de visibilidad */
+.passwordInputContainer {
+  position: relative;
+}
+
 .passwordVisibilityToggle {
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  color: #666;
+  .passwordVisibilityToggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+  }
 }
 
 .button {
@@ -75,15 +82,15 @@ body {
   max-width: 300px;
   background-color: #3366ff;
   border: none;
-  border-radius: 7px; /* Mismo border-radius que los campos de texto */
-  padding: 10px; /* Mismo padding que los campos de texto */
+  border-radius: 7px;
+  padding: 10px;
   color: white;
-  font-size: 16px; /* Mismo font-size que los campos de texto */
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   margin-bottom: 15px;
-  height: 40px; /* Altura fija para igualar los campos de texto */
-  box-sizing: border-box; /* Asegura que el padding no afecte el tamaño total */
+  height: 40px; /* Altura fija para igualar los inputs */
+  box-sizing: border-box;
 }
 
 .button:hover {

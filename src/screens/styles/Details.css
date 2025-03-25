@@ -1,0 +1,92 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+  }
+  
+  .scrollContainer {
+    overflow-y: auto;
+    height: 100vh;
+  }
+  
+  .container {
+    flex: 1;
+    padding: 20px;
+    background-color: white;
+  }
+  
+  .header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .image {
+    width: 200px;
+    height: 120px;
+    border-radius: 10px;
+    margin: 20px 0;
+  }
+  
+  .titleHeader {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .fatherHeader {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .containerDetails {
+    background-color: #f0f0f0;
+    margin-top: 10px;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .containerItemList {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  
+  .itemPoint {
+    margin-right: 8px;
+  }
+  
+  .showMore {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    padding: 0;
+  }
+  
+  .showMoreValue {
+    font-size: 14px;
+    color: #3366ff;
+  }
+  
+  .titleDetailItem {
+    font-size: 12px;
+    color: #888888;
+    margin-bottom: 4px;
+  }
+  
+  .valueDetailItem {
+    font-size: 14px;
+  }
+  
+  .separatorItem {
+    height: 1px;
+    background-color: #e5e5e5;
+    margin-top: 10px;
+  }

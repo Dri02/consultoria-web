@@ -1,0 +1,112 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: white;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .eyeIcon {
+    font-size: 48px;
+    color: black;
+    margin-bottom: 10px;
+  }
+  
+  .titleHeader {
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+  }
+  
+  .dataInputContainer {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+  }
+  
+  .textInput,
+  .dropDown {
+    margin-bottom: 20px;
+  }
+  
+  .textInputConsultancy,
+  .dropDownObservationType,
+  .dropDownView,
+  .dropDownCollaborators,
+  .textInputGoals {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .textInputGoals {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  .button {
+    width: 100%;
+    max-width: 500px;
+    padding: 10px;
+    background-color: #3366ff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .modalInfoOut {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modalInfo {
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .modalInfoTextHeader {
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .containerModalInfoButton {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-top: 25px;
+  }
+  
+  .modalInfoButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }

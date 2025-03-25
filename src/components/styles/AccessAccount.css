@@ -1,0 +1,128 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: white;
+    height: 100vh;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .lockIcon {
+    font-size: 48px;
+    color: black;
+    margin-bottom: 15px;
+  }
+  
+  .titleHeader {
+    color: black;
+    font-weight: 500;
+    font-size: 24px;
+  }
+  
+  .textInputContainer {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 20px;
+  }
+  
+  .inputWrapper {
+    position: relative;
+    width: 100%;
+  }
+  
+  .textInput {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .passwordVisibilityToggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .button {
+    width: 100%;
+    max-width: 300px;
+    background-color: #3366ff;
+    border: none;
+    border-radius: 7px;
+    padding: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 15px;
+  }
+  
+  .button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .modalInfoOut {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modalInfo {
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 300px;
+  }
+  
+  .modalInfoTextHeader {
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .containerModalInfoButton {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .modalInfoButton {
+    background-color: #3366ff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .modalInfoButton:hover {
+    background-color: #2952cc;
+  }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; // Usar react-router-dom para web
 import { FiMoreVertical, FiX } from "react-icons/fi"; // Iconos de React Icons
 import axios from "axios";
-import "./styles/Consultancies.css"; // Se importan los estilos CSS
+//import "./styles/Consultancies.css"; // Se importan los estilos CSS
 
 export default function Consultancy() {
   const [folders, setFolders] = useState([]);
@@ -32,7 +32,6 @@ export default function Consultancy() {
     const data = JSON.stringify({
       prefix: `Consultorías TI/${nameConsultancy}/Observaciones/`,
       isConsultancy: false,
-      bucket: bucket,
     });
 
     try {

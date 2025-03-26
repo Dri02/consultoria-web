@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Para manejar la navegación
-import { FiUser, FiLogOut, FiInfo } from "react-icons/fi"; // Iconos de React Icons
+import { useNavigate } from "react-router-dom"; // Navegación en web
+import { FiUser, FiLogOut, FiInfo, FiEdit } from "react-icons/fi"; // Iconos de react-icons
 import { IoMoon, IoSunny } from "react-icons/io5"; // Iconos para el tema
 import axios from "axios";
-import "../styles/CustomDrawerContent.css"; // Estilos CSS
+import "../styles/CustomDrawerContent.css"; // Asegúrate de ajustar la ruta
 
 export default function Drawer() {
   const [name, setName] = useState("");
@@ -15,18 +15,20 @@ export default function Drawer() {
   const [infoModal, setInfoModal] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const navigate = useNavigate(); // Para la navegación
+  const navigate = useNavigate();
 
   const detailsAccount = () => {
     navigate("/profile", {
       state: {
-        data: {
-          name,
-          lastname,
-          user,
-          email,
-          photo,
-        },
+        data: { name, lastname, user, email, photo },
+      },
+    });
+  };
+
+  const editDetails = () => {
+    navigate("/update-details", {
+      state: {
+        data: { name, lastname, user, email, photo },
       },
     });
   };
@@ -60,54 +62,57 @@ export default function Drawer() {
   }, []);
 
   return (
-    <div className="container">
-      <div className="header">
-        <div className="headerElements">
+    <div className="drawer-dropdown">
+      <div className="drawer-header">
+        <div className="drawer-header-elements">
           <button
-            className={`avatarContainer ${!photo ? "noPhoto" : ""}`}
+            className={`drawer-avatar ${!photo ? "noPhoto" : ""}`}
             onClick={detailsAccount}
           >
             {photo ? (
               <img
                 src={`data:image/png;base64,${photo}`}
                 alt="Profile"
-                className="avatarImage"
+                className="drawer-avatar-image"
               />
             ) : (
-              <FiUser className="accountIcon" />
+              <FiUser className="drawer-account-icon" />
             )}
           </button>
           <button
-            className="themeSwitcher"
+            className="drawer-theme-switcher"
             onClick={() => setIsDarkMode(!isDarkMode)}
           >
             {isDarkMode ? <IoSunny size={24} /> : <IoMoon size={24} />}
           </button>
         </div>
-        <div>
-          <p className="username">{user}</p>
-          <p className="email">{email}</p>
+        <div className="drawer-user-info">
+          <p className="drawer-username">{user}</p>
+          <p className="drawer-email">{email}</p>
         </div>
       </div>
-      <div className="menu">
-        <button className="menuOption" onClick={detailsAccount}>
+      <div className="drawer-menu">
+        <button className="drawer-menu-option" onClick={detailsAccount}>
           <FiUser size={24} />
-          <p className="menuText">Cuenta</p>
+          <span className="drawer-menu-text">Cuenta</span>
+        </button>
+        <button className="drawer-menu-option" onClick={editDetails}>
+          <FiEdit size={24} />
+          <span className="drawer-menu-text">Editar Detalles</span>
         </button>
         <button
-          className="lastMenuOption"
+          className="drawer-menu-option"
           onClick={() => {
             localStorage.removeItem("token");
+            setUser(false);
             navigate("/");
           }}
         >
           <FiLogOut size={24} />
-          <p className="menuText">Cerrar sesión</p>
+          <span className="drawer-menu-text">Cerrar sesión</span>
         </button>
-      </div>
-      <div className="menu">
         <button
-          className="menuOption"
+          className="drawer-menu-option"
           onClick={() =>
             setInfo(
               "ConsulTorIa\n\nHerramienta para la gestión de observaciones para equipos de Consultoria TI"
@@ -115,16 +120,16 @@ export default function Drawer() {
           }
         >
           <FiInfo size={24} />
-          <p className="menuText">Acerca de</p>
+          <span className="drawer-menu-text">Acerca de</span>
         </button>
       </div>
       {isModalVisible && (
-        <div className="modalInfoOut">
-          <div className="modalInfo">
-            <p className="modalInfoTextHeader">{infoModal}</p>
-            <div className="containerModalInfoButton">
+        <div className="drawer-modal">
+          <div className="drawer-modal-content">
+            <p className="drawer-modal-header">{infoModal}</p>
+            <div className="drawer-modal-button-container">
               <button
-                className="modalInfoButton"
+                className="drawer-modal-button"
                 onClick={() => setIsModalVisible(false)}
               >
                 Aceptar

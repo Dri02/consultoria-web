@@ -1,0 +1,9 @@
+.header-right-container {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .icon-button {
+    margin-right: 25px;
+  }
+  

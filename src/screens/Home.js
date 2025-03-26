@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff, FiMoreVertical } from "react-icons/fi";
 import axios from "axios";
-import "./styles/Home.css";
+//import "./styles/Home.css";
 
 export default function Home() {
   const [folders, setFolders] = useState([]);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom"; // Se usa react-router-dom para la navegación
 import { FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import axios from "axios";
-import "../styles/AccessAccount.css";
+//import "../styles/AccessAccount.css";
 
 export default function AccessAccount() {
   const [password, setPassword] = useState("");

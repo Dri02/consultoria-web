@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { FiFolder } from "react-icons/fi";
 import axios from "axios";
-import "./styles/UpdateDetails.css";
+//import "./styles/UpdateDetails.css";
 
 export default function UpdateDetails() {
   const [nameScreen, setNameScreen] = useState("");

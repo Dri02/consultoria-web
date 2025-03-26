@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom"; // Se utiliza react-router-dom para web
 import { FiChevronUp, FiChevronDown } from "react-icons/fi"; // Iconos de React Icons
-import "./styles/Details.css"; // Se importan los estilos CSS
+//import "./styles/Details.css"; // Se importan los estilos CSS
 
 export default function Details() {
   const [showMore, setShowMore] = useState(false);

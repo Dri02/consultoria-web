@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { IoReload, IoStop, IoPause, IoPlay } from "react-icons/io5";
 import io from "socket.io-client";
 import axios from "axios";
-import "./styles/RecordScreen.css";
+//import "./styles/RecordScreen.css";
 
 export default function RecordScreen() {
   const socket = io.connect("http://localhost:3001");

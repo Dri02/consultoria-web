@@ -1,144 +1,134 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+.drawer-dropdown {
+  position: absolute;
+  top: 60px; /* Ajusta según la altura de tu header */
+  right: 20px;
+  width: 300px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  z-index: 1000;
 }
 
-.container {
+/* Header interno del dropdown */
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.drawer-header-elements {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.drawer-avatar {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.drawer-avatar-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.drawer-account-icon {
+  font-size: 40px;
+}
+
+.drawer-theme-switcher {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.drawer-user-info {
+  text-align: right;
+}
+
+.drawer-username {
+  font-weight: bold;
+  margin: 0;
+}
+
+.drawer-email {
+  margin: 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+/* Opciones del menú */
+.drawer-menu {
   display: flex;
   flex-direction: column;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  width: 300px;
-  height: 100vh;
+  gap: 10px;
+  margin-top: 10px;
 }
 
-.header {
-  padding: 25px 18px;
-  background-color: #3366ff;
-}
-
-.headerElements {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 18px;
-}
-
-.avatarContainer {
-  width: 65px;
-  height: 65px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.noPhoto {
-  border: 2.5px solid white;
-}
-
-.avatarImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.accountIcon {
-  font-size: 60px;
-  color: black;
-}
-
-.username {
-  font-size: 14.5px;
-  font-weight: bold;
-  color: white;
-  margin-bottom: 5px;
-}
-
-.email {
-  font-size: 13.5px;
-  color: rgba(255, 255, 255, 0.5);
-  margin-bottom: 10px;
-}
-
-.themeSwitcher {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: white;
-}
-
-.menu {
-  padding: 20px 18px;
-  background-color: white;
-  border-top: 1px solid #e5e5e5;
-}
-
-.menuOption {
+.drawer-menu-option {
   display: flex;
   align-items: center;
-  margin-bottom: 25px;
-  background: none;
+  background: #f7f7f7;
   border: none;
+  border-radius: 5px;
+  padding: 8px;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
 
-.lastMenuOption {
-  display: flex;
-  align-items: center;
-  background: none;
-  border: none;
-  cursor: pointer;
+.drawer-menu-option:hover {
+  background: #eaeaea;
 }
 
-.menuText {
-  font-size: 14px;
-  font-weight: bold;
-  margin-left: 25px;
-  color: #333;
+.drawer-menu-text {
+  margin-left: 10px;
+  font-size: 1em;
 }
 
-.modalInfoOut {
+/* Modal interno */
+.drawer-modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  z-index: 1100;
 }
 
-.modalInfo {
-  background-color: white;
-  border-radius: 20px;
-  padding: 20px 30px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.drawer-modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 400px;
   text-align: center;
 }
 
-.modalInfoTextHeader {
+.drawer-modal-header {
   font-weight: bold;
-  margin: 0;
+  margin-bottom: 20px;
 }
 
-.containerModalInfoButton {
+.drawer-modal-button-container {
   display: flex;
   justify-content: center;
-  align-items: flex-end;
-  margin-top: 25px;
 }
 
-.modalInfoButton {
-  background: none;
+.drawer-modal-button {
+  padding: 8px 16px;
+  background: #3366ff;
+  color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
 }

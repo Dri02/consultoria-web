@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom"; // Para la navegaci
 import { FiCamera, FiEye, FiEyeOff } from "react-icons/fi"; // Iconos de Feather
 import { motion } from "framer-motion"; // Para animaciones
 import axios from "axios";
-import "../styles/UpdateAccount.css"; // Estilos CSS
+//import "../styles/UpdateAccount.css"; // Estilos CSS
 
 export default function UpdateAccount() {
   const [name, setName] = useState("");

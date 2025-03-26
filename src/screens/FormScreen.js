@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom"; // Usamos react-rou
 import { FiFolder, FiChevronDown, FiEdit } from "react-icons/fi"; // Iconos de React Icons
 import Select from "react-select"; // Componente para el dropdown
 import axios from "axios";
-import "./styles/FormScreen.css"; // Estilos CSS
+//import "./styles/FormScreen.css"; // Estilos CSS
 
 export default function CreateObservation() {
   // Estados para los datos de cada dropdown
@@ -46,7 +46,7 @@ export default function CreateObservation() {
 
   // URLs de los endpoints
   const urls = [
-    "http://localhost:4000/api/entity",
+    "http://192.168.167.158:4000/api/entity",
     "http://localhost:4000/api/ueb",
     "http://localhost:4000/api/unit",
     "http://localhost:4000/api/area",
@@ -349,8 +349,8 @@ export default function CreateObservation() {
                   verifyDataLength(
                     unitData,
                     selectedOption.label,
-                    infoUrls["unit"].isEmptyData,
-                    infoUrls["unit"].isDisabledEditIcon
+                    infoUrls.unit.isEmptyData,
+                    infoUrls.unit.isDisabledEditIcon,
                   );
                 }}
                 isDisabled={!entity}

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom"; // Para manejar nav
 import { FiFolder, FiChevronDown, FiEdit } from "react-icons/fi"; // Iconos
 import Select from "react-select"; // Para dropdown y multiselect
 import axios from "axios";
-import "./styles/FormScreenDos.css"; // Estilos CSS
+//import "./styles/FormScreenDos.css"; // Estilos CSS
 
 export default function CreateConsultancy() {
   const [nameConsultancy, setNameConsultancy] = useState("");
@@ -33,7 +33,7 @@ export default function CreateConsultancy() {
   // Obtiene la lista de consultores (excluyendo al autor)
   const getConsultants = async () => {
     try {
-      const response = await axios.get("http://localhost:3004/getUsers");
+      const response = await axios.get("http://192.168.167.158:3004/getUsers");
       const arrayResponse = response.data.filter(
         (consultant) => consultant !== author
       );
@@ -54,7 +54,7 @@ export default function CreateConsultancy() {
       bucket: bucket,
     });
     try {
-      const response = await axios.post("http://localhost:3002/nameFolders", payload, {
+      const response = await axios.post("http://192.168.167.158:3002/nameFolders", payload, {
         headers: { "Content-Type": "application/json" },
       });
       const folderNames = response.data;

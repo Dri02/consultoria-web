@@ -7,9 +7,10 @@
     Link,
     useNavigate,
     Outlet,
+    useLocation,
   } from "react-router-dom";
   import styled from "styled-components";
-  import { FiPlus, FiMoreVertical } from "react-icons/fi";
+  import { FiPlus, FiMoreVertical, FiArrowLeft } from "react-icons/fi";
 
   // Componentes de autenticación
   import Login from "./components/login/Login";
@@ -36,37 +37,46 @@
 
   // Layout principal que simula un header personalizado con un tab superior
   const MainLayout = ({ onLogout }) => {
-    const navigate = useNavigate();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+    const navigate = useNavigate();
+  
     return (
       <LayoutContainer>
         <Header>
           <Nav>
-            <StyledLink to="/home">Inicio</StyledLink>
-            <StyledLink to="/consultancies">Consultorías</StyledLink>
+            <StyledLink to="/home" name="Home">Todo</StyledLink>
+            <StyledLink to="/myconsulties" name="MyConsultancies">Mis Consultorías</StyledLink>
+            <StyledLink to="/collaborations" name="Collaborations">Colaboraciones</StyledLink>
           </Nav>
           <HeaderRight>
-            {/* Botón de 3 puntitos para desplegar el menú */}
             <button
-            color=" #3366ff;"
               className="header-drawer-toggle"
               onClick={() => setIsDrawerOpen(!isDrawerOpen)}
             >
-              <FiMoreVertical size={30} color="white" />
+              <FiMoreVertical size={30} color="blue" />
             </button>
           </HeaderRight>
         </Header>
+  
         <Content>
           {isDrawerOpen && <Drawer />}
-          <Outlet />
+  
+          {/* Aquí envolvemos el Outlet con un contenedor 
+              que incluya el BackArrowIfNotHome */}
+          <div className="page-container">
+            <BackArrowIfNotHome />
+            <Outlet />
+          </div>
         </Content>
+  
         <FloatingButton onClick={() => navigate("/form-screen")}>
           <FiPlus size={25} />
         </FloatingButton>
       </LayoutContainer>
     );
   };
+
+  
 
   const AppNavigation = () => {
     const [user, setUser] = useState(true);
@@ -121,6 +131,7 @@
             <Route path="verify-email" element={<VerifyEmail />} />
             <Route path="profile" element={<Profile />} />
             <Route path="drawer" element={<Drawer />} />
+            <Route path="verify-email" element={<VerifyEmail />} />
           </Route>
         )}
         <Route path="/" element={<Login />} />
@@ -131,6 +142,26 @@
       </Routes>
     );
   };
+
+  function BackArrowIfNotHome() {
+    const location = useLocation();
+    const navigate = useNavigate();
+  
+    // Si la ruta actual es "/home", no mostramos nada
+    if (location.pathname === "/home" || location.pathname === "/myconsulties" || location.pathname === "/collaborations")
+       return null;
+  
+    // Si estamos en otra ruta, mostramos la flecha
+    return (
+      <div style={{ marginBottom: "1rem" }}>
+        <FiArrowLeft 
+          size={24} 
+          style={{ cursor: "pointer" }} 
+          onClick={() => navigate(-1)} 
+        />
+      </div>
+    );
+  }
 
   export default function App() {
     return (
@@ -180,7 +211,7 @@
   const Content = styled.main`
     flex: 1;
     padding: 20px;
-    background-color: #f4f4f4;
+    // background-color: #f4f4f4;
   `;
 
   const FloatingButton = styled.button`

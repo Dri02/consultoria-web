@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { IoReload, IoStop, IoPause, IoPlay } from "react-icons/io5";
 import io from "socket.io-client";
 import axios from "axios";
-//import "./styles/RecordScreen.css";
+import "./styles/RecordScreen.css";
 
 export default function RecordScreen() {
   const socket = io.connect("http://localhost:3001");
@@ -67,7 +67,7 @@ export default function RecordScreen() {
     });
 
     try {
-      const response = await axios.post("http://localhost:3002/nameFolders", data, {
+      const response = await axios.post("http://localhost:3002/nameFoldersW", data, {
         headers: { "Content-Type": "application/json" },
       });
       const folderNames = response.data;
@@ -104,28 +104,36 @@ export default function RecordScreen() {
     socket.emit("pausa");
   };
 
+  // Dentro de RecordScreen.js, en la función uploadMessage
+
   const uploadMessage = async () => {
+    // Si dataParams.bucket o dataParams.nameConsultancy son undefined, se asignan valores por defecto
+    const bucket = dataParams?.bucket?.trim() || "oriente";
+    const nameConsultancy = dataParams?.nameConsultancy?.trim() || "DefaultConsultancy";
+  
     socket.emit("upload", {
       nameScreen: nameScreenRef.current,
       startDate: startDateRef.current,
       endDate: endDateRef.current,
-      nameConsultancy: dataParams.nameConsultancy,
+      nameConsultancy: nameConsultancy,
       startDateConsultancy: startDateConsultancyRef.current,
       endDateConsultancy: endDateConsultancyRef.current,
-      author: dataParams.author,
-      entity: dataParams.entity,
-      ueb: dataParams.ueb,
-      unit: dataParams.unit,
-      area: dataParams.area,
-      process: dataParams.process,
-      worker: dataParams.worker,
-      observationType: dataParams.observationType,
-      view: dataParams.view,
-      collaborators: dataParams.collaborators,
-      goals: dataParams.goals,
-      bucket: dataParams.bucket,
+      author: dataParams?.author,
+      entity: dataParams?.entity,
+      ueb: dataParams?.ueb,
+      unit: dataParams?.unit,
+      area: dataParams?.area,
+      process: dataParams?.process,
+      worker: dataParams?.worker,
+      observationType: dataParams?.observationType,
+      view: dataParams?.view,
+      collaborators: dataParams?.collaborators,
+      goals: dataParams?.goals,
+      bucket: bucket,
     });
   };
+  
+
 
   const startResponse = useCallback(() => {
     setIsStartedResponse(true);

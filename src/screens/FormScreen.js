@@ -46,7 +46,7 @@ export default function CreateObservation() {
 
   // URLs de los endpoints
   const urls = [
-    "http://192.168.167.158:4000/api/entity",
+    "http://localhost:4000/api/entity",
     "http://localhost:4000/api/ueb",
     "http://localhost:4000/api/unit",
     "http://localhost:4000/api/area",

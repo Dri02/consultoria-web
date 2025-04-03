@@ -5,155 +5,156 @@ body {
   background-color: #f4f4f4;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: white;
-  height: 100vh;
-}
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    height: 100vh;
+  }
 
-.counter {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
+  .counter {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 
-.counterText {
-  font-size: 55px;
-  text-align: center;
-}
+  .counterText {
+    font-size: 55px;
+    text-align: center;
+  }
 
-.containerControls {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
+  .containerControls {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
 
-.controls {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-}
+  .controls {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
 
-.secondControl {
-  width: 40px;
-  height: 40px;
-  border-radius: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 30px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
+  .secondControl {
+    width: 40px;
+    height: 40px;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
 
-.reloadControl {
-  margin-right: 70px;
-}
+  .reloadControl {
+    margin-right: 70px;
+  }
 
-.stopControl {
-  margin-left: 70px;
-}
+  .stopControl {
+    margin-left: 70px;
+  }
 
-.principalControl {
-  width: 60px;
-  height: 60px;
-  border-radius: 30px;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-  border: 0.5px solid #6c6c6c;
-  cursor: pointer;
-}
+  .principalControl {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    border: 0.5px solid #6c6c6c;
+    cursor: pointer;
+  }
 
-.playControl {
-  width: 40px;
-  height: 40px;
-  border-radius: 25px;
-  background-color: #ff3f35;
-}
+   .playControl {
+    width: 40px;
+    height: 40px;
+    border-radius: 25px;
+    background-color: #ff3f35;
+  } 
 
-.modalInfoOut {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
+  .modalInfoOut {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
 
-.modalInfo {
-  background-color: white;
-  border-radius: 20px;
-  padding: 20px 30px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  max-width: 300px;
-}
+  .modalInfo {
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 300px;
+  }
 
-.modalInfoTextHeader {
-  font-weight: bold;
-  margin-bottom: 20px;
-}
+  .modalInfoTextHeader {
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
 
-.containerModalInfoButton {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 25px;
-}
+  .containerModalInfoButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+  }
 
-.modalInfoButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-}
+  .modalInfoButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
 
-.optionsModal {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
+  .optionsModal {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
 
-.separatorOptions {
-  color: #e5e5e5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  .separatorOptions {
+    color: #e5e5e5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-.separatorOptionsFinish {
-  margin-left: 23px;
-  margin-right: 23px;
-}
+  .separatorOptionsFinish {
+    margin-left: 23px;
+    margin-right: 23px;
+  }
 
-.textInputContainer {
-  width: 100%;
-  margin: 10px 0;
-  height: 30px;
-}
+  .textInputContainer {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 20px;
+    position: relative;
+  }
 
-.textInput {
-  width: 100%;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
-}
+  .textInput {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  } 

@@ -1,167 +1,200 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-}
+/* Consultancies.css */
 
-.container {
-  padding: 20px;
-  background-color: white;
-}
-
-.scrollContainer {
-  overflow-y: auto;
-  height: calc(100vh - 40px);
-}
-
-.containerItemList {
+.app-container {
+  width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  cursor: pointer;
+  flex-direction: column;
+  background-color: #fff;
+  font-family: Arial, sans-serif;
 }
 
-.containerVideo {
-  padding: 5px;
-  background-color: white;
+.video-container {
   position: relative;
+  background-color: #000;
+  padding: 10px;
 }
 
 .video {
   width: 100%;
-  height: 215px;
+  max-height: 400px;
+  display: block;
 }
 
-.headerVideo {
+.header-video {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.title-video {
+  color: #fff;
+  font-size: 16px;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.scroll-view {
+  overflow-y: auto;
+  flex: 1;
+  padding: 10px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-list {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  right: 5px;
-  padding: 5px;
-  background-color: rgba(0, 0, 0, 0.8);
+  padding: 10px;
+  cursor: pointer;
 }
 
-.titleVideo {
-  color: white;
-  font-size: 14px;
-  max-width: 90%;
-  margin: 0;
+.border-bottom {
+  border-bottom: 1px solid #ccc;
 }
 
 .image {
   width: 100px;
   height: 60px;
-  border-radius: 10px;
+  border-radius: 5px;
+  object-fit: cover;
   margin-right: 10px;
 }
 
-.containerElementsItemList {
-  flex: 1;
+.image.selected {
+  border: 2px solid #3366FF;
 }
 
-.titleHeaderElements {
+.item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.title-header {
   font-size: 16px;
   font-weight: bold;
-  margin: 0;
+  color: #333;
 }
 
-.detailsElements {
-  color: #888888;
-  margin: 0;
+.details {
+  font-size: 14px;
+  color: #666;
 }
 
-.detailsConsultancyElements {
-  font-size: 13px;
-}
-
-.containerDate {
+.date-container {
   display: flex;
   align-items: center;
+  margin-top: 5px;
 }
 
-.detailsDateElements {
+.date {
   font-size: 12px;
+  color: #999;
 }
 
-.detailsSeparatorElements {
+.separator {
   margin: 0 5px;
+  font-size: 12px;
+  color: #999;
 }
 
-.moreIcon {
-  margin-left: 10px;
-}
-
-.iconButton {
+.more-icon-button {
   background: none;
   border: none;
   cursor: pointer;
+  padding: 5px;
 }
 
-.modalInfoOut,
-.modalOptionsOut {
+.modal-out {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 
-.modalInfo {
-  background-color: white;
-  border-radius: 20px;
-  padding: 20px 30px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.modal-info {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 300px;
+  width: 100%;
   text-align: center;
 }
 
-.modalInfoTextHeader {
-  font-weight: bold;
-  margin: 0;
-}
-
-.containerModalInfoButton {
-  margin-top: 25px;
-}
-
-.modalInfoButton {
-  background: none;
-  border: none;
-  cursor: pointer;
+.modal-info-header {
   font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
-.modalOptions {
+.modal-info-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.modal-info-button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #3366FF;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.options-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+.options-container {
   position: absolute;
-  background-color: white;
-  border-radius: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 10px;
   width: 130px;
 }
 
-.optionButton {
+.option-button {
   width: 100%;
-  padding: 10px 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
+  padding: 8px 10px;
   text-align: left;
-}
-
-.optionButton:hover {
-  background-color: #f4f4f4;
-}
-
-.closeButton {
   background: none;
   border: none;
   cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.option-button:hover {
+  background-color: #f0f0f0;
 }

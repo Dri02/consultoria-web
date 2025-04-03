@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Navegación en web
 import { FiUser, FiLogOut, FiInfo, FiEdit } from "react-icons/fi"; // Iconos de react-icons
-import { IoMoon, IoSunny } from "react-icons/io5"; // Iconos para el tema
 import axios from "axios";
 import "../styles/CustomDrawerContent.css"; // Asegúrate de ajustar la ruta
 
@@ -13,7 +12,6 @@ export default function Drawer() {
   const [photo, setPhoto] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [infoModal, setInfoModal] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const navigate = useNavigate();
 
@@ -79,12 +77,12 @@ export default function Drawer() {
               <FiUser className="drawer-account-icon" />
             )}
           </button>
-          <button
+          {/* <button
             className="drawer-theme-switcher"
             onClick={() => setIsDarkMode(!isDarkMode)}
           >
             {isDarkMode ? <IoSunny size={24} /> : <IoMoon size={24} />}
-          </button>
+          </button> */}
         </div>
         <div className="drawer-user-info">
           <p className="drawer-username">{user}</p>

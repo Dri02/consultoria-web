@@ -1,22 +1,35 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+.scrollView {
+  min-height: 100vh;
+  overflow-y: auto;
+  background-color: #fff;
 }
 
 .container {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
   background-color: white;
+  height: 100vh;
 }
 
 .containerItemList {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
-  align-items: center;
+  align-items: left;
   background-color: #ffffff;
   padding: 10px 0;
   cursor: pointer;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.containerItemList:last-child {
+  border-bottom: none;
 }
 
 .image {
@@ -24,6 +37,7 @@ body {
   height: 60px;
   border-radius: 10px;
   margin-right: 10px;
+  object-fit: cover;
 }
 
 .containerElementsItemList {
@@ -32,6 +46,7 @@ body {
 
 .headerElements {
   display: flex;
+  flex-direction: row;
   align-items: center;
 }
 
@@ -39,7 +54,6 @@ body {
   font-size: 16px;
   font-weight: bold;
   max-width: 90%;
-  margin: 0;
 }
 
 .edgeViewIcon {
@@ -48,19 +62,21 @@ body {
 
 .detailsElements {
   color: #888888;
-  margin: 0;
 }
 
 .detailsAuthorElements {
   font-size: 14px;
+  display: block;
 }
 
 .detailsEntityElements {
   font-size: 13px;
+  display: block;
 }
 
 .containerDate {
   display: flex;
+  flex-direction: row;
   align-items: center;
 }
 
@@ -77,71 +93,66 @@ body {
   cursor: pointer;
 }
 
-.modalInfoOut {
+.modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 2000;
+  justify-content: center;
+  z-index: 1000;
 }
 
 .modalInfo {
   background-color: white;
   border-radius: 20px;
   padding: 20px 30px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 90%;
   text-align: center;
 }
 
 .modalInfoTextHeader {
   font-weight: bold;
-  margin: 0;
 }
 
 .containerModalInfoButton {
+  margin-top: 25px;
   display: flex;
   justify-content: center;
-  margin-top: 25px;
 }
 
 .modalInfoButton {
-  background-color: #3366ff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  color: white;
-  font-size: 16px;
+  padding: 8px 16px;
   cursor: pointer;
 }
 
-.modalInfoButton:hover {
-  background-color: #2952cc;
+.optionsOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
 }
 
-.optionsModal {
+.optionsContainer {
   position: absolute;
   background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  z-index: 3000;
+  border-radius: 20px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+  width: 130px;
+  overflow: hidden;
 }
 
-.optionsModal button {
-  display: block;
+.optionButton {
   width: 100%;
-  padding: 10px;
-  background: none;
+  padding: 10px 20px;
+  background-color: white;
   border: none;
   text-align: left;
   cursor: pointer;
-}
-
-.optionsModal button:hover {
-  background-color: #f0f0f0;
 }

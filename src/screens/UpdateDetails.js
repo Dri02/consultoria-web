@@ -17,7 +17,7 @@ export default function UpdateDetails() {
 
   const sendUpdate = async (newData) => {
     try {
-      await axios.post("http://localhost:3002/modifyJson", newData, {
+      await axios.post("http://localhost:3002/modifyJsonW", newData, {
         headers: { "Content-Type": "application/json" },
       });
       if (isConsultancy) {
@@ -28,7 +28,7 @@ export default function UpdateDetails() {
             notRecursive: false,
           });
           try {
-            await axios.post("http://localhost:3002/modifyJson", sendData, {
+            await axios.post("http://localhost:3002/modifyJsonW", sendData, {
               headers: { "Content-Type": "application/json" },
             });
             navigate("/home");
@@ -51,7 +51,7 @@ export default function UpdateDetails() {
     });
 
     try {
-      const response = await axios.post("http://localhost:3002/nameFolders", verifyData, {
+      const response = await axios.post("http://localhost:3002/nameFoldersW", verifyData, {
         headers: { "Content-Type": "application/json" },
       });
       const newData = JSON.stringify({
@@ -112,7 +112,7 @@ export default function UpdateDetails() {
         prefix: `Consultorías TI/${data.nameConsultancy}/Observaciones/`,
       });
       axios
-        .post("http://localhost:3002/nameFolders", sendData, {
+        .post("http://localhost:3002/nameFoldersW", sendData, {
           headers: { "Content-Type": "application/json" },
         })
         .then((response) => {

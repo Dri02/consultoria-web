@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // Para manejar navegación y parámetros
+import { data, useLocation, useNavigate } from "react-router-dom"; // Para manejar navegación y parámetros
 import { FiFolder, FiChevronDown, FiEdit } from "react-icons/fi"; // Iconos
 import Select from "react-select"; // Para dropdown y multiselect
 import axios from "axios";
@@ -33,7 +33,7 @@ export default function CreateConsultancy() {
   // Obtiene la lista de consultores (excluyendo al autor)
   const getConsultants = async () => {
     try {
-      const response = await axios.get("http://192.168.167.158:3004/getUsers");
+      const response = await axios.get("http://localhost:3004/getUsers");
       const arrayResponse = response.data.filter(
         (consultant) => consultant !== author
       );
@@ -49,12 +49,22 @@ export default function CreateConsultancy() {
 
   // Envía datos y navega a la pantalla de grabación si la consultoría no existe
   const sendData = async () => {
+    // Validación de campos obligatorios
+    if (!nameConsultancy.trim()) {
+      setInfo("El nombre de la consultoría es obligatorio");
+      return;
+    }
+    if (!bucket.trim()) {
+      setInfo("El bucket no se ha definido correctamente");
+      return;
+    }
+  
     const payload = JSON.stringify({
       prefix: `Consultorías TI/${nameConsultancy}`,
       bucket: bucket,
     });
     try {
-      const response = await axios.post("http://192.168.167.158:3002/nameFolders", payload, {
+      const response = await axios.post("http://localhost:3002/nameFoldersW", payload, {
         headers: { "Content-Type": "application/json" },
       });
       const folderNames = response.data;
@@ -111,7 +121,9 @@ export default function CreateConsultancy() {
               headers: { "Content-Type": "application/json" },
             })
             .then((response) => {
-              setBucket(response.data);
+              // Si el bucket viene vacío, se asigna un valor por defecto (ejemplo: "default_bucket")
+              setBucket(response.data && response.data.trim() ? response.data : "oriente");
+              console.log("Bucket obtenido:", response.data);
             })
             .catch((error) => {
               setInfo(error.response?.data || "Error al obtener bucket");
@@ -122,6 +134,7 @@ export default function CreateConsultancy() {
         });
     }
   }, []);
+  
 
   useEffect(() => {
     getConsultants();

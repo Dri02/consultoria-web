@@ -77,10 +77,12 @@ export default function UpdateAccount() {
     const dataPayload = JSON.stringify({
       username: user,
       email: email,
-      olduser: olduser,
-      oldemail: oldemail,
+      olduser: user,
+      oldemail: email,
     });
-
+    
+    console.log(dataPayload);
+    
     // Se prepara un formData para enviar todos los campos, incluida la foto
     const formData = new FormData();
     formData.append("name", name);
@@ -92,16 +94,22 @@ export default function UpdateAccount() {
     formData.append("olduser", olduser);
 
     try {
-      const response = await axios.post("http://localhost:3004/verifyEmailUpdate", dataPayload, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await axios.post(
+        "http://localhost:3004/verifyEmailUpdateW",
+        dataPayload, // Axios se encarga de stringify cuando el header es application/json
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       setInfo(response.data);
       navigate("/verify-email", {
         state: { email, role: "update", data },
       });
     } catch (error) {
       setInfo(
-        error.response ? error.response.data : "Error al conectar con el servidor"
+        error.response
+          ? error.response.data
+          : "Error al conectar con el servidor"
       );
     }
   };

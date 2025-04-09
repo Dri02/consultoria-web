@@ -21,6 +21,8 @@
 
   // Pantallas principales
   import Home from "./screens/Home";
+  import MyConsulties from "./screens/MyConsulties";
+  import Collaborations from "./screens/Collaborations"
   import Profile from "./screens/Profile";
   import AccessAccount from "./components/user/AccessAccount";
   import UpdateAccount from "./components/user/UpdateAccount";
@@ -32,7 +34,6 @@
   import FormScreenDos from "./screens/FormScreenDos";
 
   // Componente Drawer (menú plegable)
-  // Asegúrate de que el Drawer esté adaptado a web y con un estilo "bonito"
   import Drawer from "./screens/utils/CustomDrawerContent";
 
   // Layout principal que simula un header personalizado con un tab superior
@@ -44,16 +45,16 @@
       <LayoutContainer>
         <Header>
           <Nav>
-            <StyledLink to="/home" name="Home">Todo</StyledLink>
-            <StyledLink to="/myconsulties" name="MyConsultancies">Mis Consultorías</StyledLink>
-            <StyledLink to="/collaborations" name="Collaborations">Colaboraciones</StyledLink>
+            <StyledLink to="/home" name="Home" key={"Home"}>Todo</StyledLink>
+            <StyledLink to="/consulties" name="MyConsultancies" key={"MyConsultancies"}>Mis Consultorías</StyledLink>
+            <StyledLink to="/collaborations" name="Collaborations" key={"Collaborations"}>Colaboraciones</StyledLink>
           </Nav>
           <HeaderRight>
             <button
               className="header-drawer-toggle"
               onClick={() => setIsDrawerOpen(!isDrawerOpen)}
             >
-              <FiMoreVertical size={30} color="blue" />
+              <FiMoreVertical size={30} color="white" />
             </button>
           </HeaderRight>
         </Header>
@@ -104,8 +105,10 @@
             <Route path="/forget-password" element={<ForgetPassword />} />
             <Route path="/new-password" element={<NewPassword />} />
             <Route path="/" element={<MainLayout onLogout={handleLogout} />}>
-              <Route path="home" element={<Home />} />
-              <Route path="consultancies" element={<Consultancies />} />
+              <Route path="home" element={<Home />}/>
+              <Route path="consulties" element={<MyConsulties />} />
+              <Route path="collaborations" element={<Collaborations />} />
+              <Route path="myconsulties" element={<Consultancies />} />
               <Route path="details" element={<Details />} />
               <Route path="update-details" element={<UpdateDetails />} />
               <Route path="form-screen" element={<FormScreen />} />
@@ -120,7 +123,9 @@
         ) : (
           <Route path="*" element={<MainLayout onLogout={handleLogout} />}>
             <Route path="home" element={<Home />} />
-            <Route path="consultancies" element={<Consultancies />} />
+            <Route path="consulties" element={<MyConsulties />} />
+            <Route path="myconsulties" element={<Consultancies />} />
+            <Route path="collaborations" element={<Collaborations />} />
             <Route path="details" element={<Details />} />
             <Route path="update-details" element={<UpdateDetails />} />
             <Route path="form-screen" element={<FormScreen />} />
@@ -148,7 +153,7 @@
     const navigate = useNavigate();
   
     // Si la ruta actual es "/home", no mostramos nada
-    if (location.pathname === "/home" || location.pathname === "/myconsulties" || location.pathname === "/collaborations")
+    if (location.pathname === "/home" || location.pathname === "/consulties" || location.pathname === "/collaborations")
        return null;
   
     // Si estamos en otra ruta, mostramos la flecha
@@ -174,59 +179,58 @@
   // Estilos con styled-components
 
   const LayoutContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    position: relative;
-  `;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+`;
 
-  const Header = styled.header`
-    background-color: #3366ff;
-    padding: 10px 20px;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  `;
+const Header = styled.header`
+  background-color: #3366ff;
+  padding: 10px 20px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 
-  const Nav = styled.nav`
-    display: flex;
-    gap: 20px;
-  `;
+const Nav = styled.nav`
+  display: flex;
+  gap: 20px;
+`;
 
-  const StyledLink = styled(Link)`
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    &:hover {
-      text-decoration: underline;
-    }
-  `;
+const StyledLink = styled(Link)`
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
-  const HeaderRight = styled.div`
-    display: flex;
-    align-items: center;
-  `;
+const HeaderRight = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
-  const Content = styled.main`
-    flex: 1;
-    padding: 20px;
-    // background-color: #f4f4f4;
-  `;
+const Content = styled.main`
+  flex: 1;
+  padding: 20px;
+`;
 
-  const FloatingButton = styled.button`
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    border: none;
-    border-radius: 50%;
-    background-color: #3366ff;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  `;
+const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background-color: #3366ff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+`;

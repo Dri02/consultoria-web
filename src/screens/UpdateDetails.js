@@ -5,9 +5,9 @@ import axios from "axios";
 //import "./styles/UpdateDetails.css";
 
 export default function UpdateDetails() {
-  const [nameScreen, setNameScreen] = useState("");
-  const [nameConsultancy, setNameConsultancy] = useState("");
-  const [goals, setGoals] = useState([]);
+  const [nameScreen, setNameScreen] = useState(""); // Asegúrate de que sea una cadena vacía
+  const [nameConsultancy, setNameConsultancy] = useState(""); // Asegúrate de que sea una cadena vacía
+  const [goals, setGoals] = useState([]); // Asegúrate de que sea un array vacío
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [infoModal] = useState("");
   const [folders, setFolders] = useState([]);
@@ -39,7 +39,7 @@ export default function UpdateDetails() {
       }
       navigate("/home");
     } catch (error) {
-      setInfo(error.response.data);
+      updateInfo(error.response.data);
     }
   };
 
@@ -78,8 +78,8 @@ export default function UpdateDetails() {
             : folderNames.includes(nameScreen)
         ) {
           isConsultancy
-            ? setInfo("La consultoría ya existe")
-            : setInfo("La observación ya existe");
+            ? updateInfo("La consultoría ya existe")
+            : updateInfo("La observación ya existe");
         } else {
           sendUpdate(newData);
         }
@@ -87,13 +87,13 @@ export default function UpdateDetails() {
         sendUpdate(newData);
       }
     } catch (error) {
-      setInfo(error.response.data);
+      updateInfo(error.response.data);
     }
   };
 
-  const setInfo = (info) => {
+  const updateInfo = (info) => {
     setIsModalVisible(true);
-    setInfo(info);
+    updateInfo(info); // Aquí `setInfo` es el setter del estado
   };
 
   useEffect(() => {
@@ -119,7 +119,8 @@ export default function UpdateDetails() {
           setFolders(response.data);
         })
         .catch((error) => {
-          setInfo(error.response.data);
+          console.error("Error en la solicitud:", error.response?.data || error.message);
+          updateInfo(error.response.data);
           setIsModalVisible(true);
         });
     }
@@ -139,17 +140,17 @@ export default function UpdateDetails() {
       >
         <div>
           <input
-            type="text"
-            placeholder={`Introduce un nombre de ${
-              isConsultancy ? "consultoría" : "observación"
-            }`}
-            value={isConsultancy ? nameConsultancy : nameScreen}
-            onChange={(e) =>
-              isConsultancy
-                ? setNameConsultancy(e.target.value)
-                : setNameScreen(e.target.value)
-            }
-            className="textInput"
+          type="text"
+          placeholder={`Introduce un nombre de ${
+            isConsultancy ? "consultoría" : "observación"
+          }`}
+          value={isConsultancy ? nameConsultancy || "" : nameScreen || ""}
+          onChange={(e) =>
+            isConsultancy
+            ? setNameConsultancy(e.target.value)
+            : setNameScreen(e.target.value)
+          }
+          className="textInput"
           />
         </div>
         {isConsultancy && (

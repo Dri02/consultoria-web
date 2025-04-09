@@ -107,30 +107,35 @@ export default function RecordScreen() {
   // Dentro de RecordScreen.js, en la función uploadMessage
 
   const uploadMessage = async () => {
-    // Si dataParams.bucket o dataParams.nameConsultancy son undefined, se asignan valores por defecto
-    const bucket = dataParams?.bucket?.trim() || "oriente";
+    // Asegúrate de que todos los datos necesarios estén presentes
+    const bucket = dataParams?.bucket?.trim() || "files-consultoria-minio";
     const nameConsultancy = dataParams?.nameConsultancy?.trim() || "DefaultConsultancy";
   
-    socket.emit("upload", {
-      nameScreen: nameScreenRef.current,
-      startDate: startDateRef.current,
-      endDate: endDateRef.current,
-      nameConsultancy: nameConsultancy,
-      startDateConsultancy: startDateConsultancyRef.current,
+    const payload = {
+      nameScreen: nameScreenRef.current?.trim() || "DefaultScreenName", // Nombre de la pantalla
+      startDate: startDateRef.current || new Date().toISOString(), // Fecha de inicio
+      endDate: endDateRef.current || new Date().toISOString(), // Fecha de fin
+      nameConsultancy: nameConsultancy, // Nombre de la consultoría
+      startDateConsultancy: startDateConsultancyRef.current || new Date().toISOString(),
       endDateConsultancy: endDateConsultancyRef.current,
-      author: dataParams?.author,
-      entity: dataParams?.entity,
-      ueb: dataParams?.ueb,
-      unit: dataParams?.unit,
-      area: dataParams?.area,
-      process: dataParams?.process,
-      worker: dataParams?.worker,
-      observationType: dataParams?.observationType,
-      view: dataParams?.view,
-      collaborators: dataParams?.collaborators,
-      goals: dataParams?.goals,
-      bucket: bucket,
-    });
+      author: dataParams?.author || "DefaultAuthor", // Autor
+      entity: dataParams?.entity || "DefaultEntity", // Entidad
+      ueb: dataParams?.ueb || "DefaultUEB", // UEB
+      unit: dataParams?.unit || "DefaultUnit", // Unidad
+      area: dataParams?.area || "DefaultArea", // Área
+      process: dataParams?.process || "DefaultProcess", // Proceso
+      worker: dataParams?.worker || "DefaultWorker", // Trabajador
+      observationType: dataParams?.observationType || "DefaultObservationType", // Tipo de observación
+      view: dataParams?.view || {}, // Vista
+      collaborators: dataParams?.collaborators || [], // Colaboradores
+      goals: dataParams?.goals || [], // Metas
+      bucket: bucket, // Bucket
+    };
+  
+    console.log("Datos enviados a través de socket.emit('upload'):", payload);
+  
+    // Envía los datos al segundo frontend
+    socket.emit("upload", payload);
   };
   
 
@@ -205,7 +210,7 @@ export default function RecordScreen() {
   }, [isStartedRequest]);
 
   useEffect(() => {
-    const currentDate = new Date();
+    let currentDate = new Date();
     let hour = currentDate.getHours();
     let minute = currentDate.getMinutes();
     let second = currentDate.getSeconds();
@@ -230,18 +235,19 @@ export default function RecordScreen() {
         setStartDateConsultancy(formattedDate);
         startDateConsultancyRef.current = formattedDate;
       }
-    } else {
-      if (isStartedConsultancy && !isDiscarded) {
-        setEndDateConsultancy(formattedDate);
-        endDateConsultancyRef.current = formattedDate;
-      }
     }
+      if (isStartedConsultancy) {
+        if (!isDiscarded) {
+          setEndDateConsultancy(formattedDate);
+          endDateConsultancyRef.current = formattedDate;
+        }
+      }
 
     if (isPausedResponse) {
       setEndDate(formattedDate);
       endDateRef.current = formattedDate;
     }
-  }, [isStartedResponse, isPausedResponse, isStartedConsultancy, isDiscarded]);
+  }, [isStartedResponse, isPausedResponse]);
 
   useEffect(() => {
     socket.on("started_record", startResponse);

@@ -36,6 +36,7 @@ export default function VerifyEmail() {
       const response = await axios.post("http://localhost:3004/verifyCode", payload, {
         headers: { "Content-Type": "application/json" },
       });
+      console.log(payload, role)
       setInfo(response.data);
 
       if (role === "register") {
@@ -50,7 +51,8 @@ export default function VerifyEmail() {
       } else if (role === "recover") {
         navigate("/new-password", { state: { email: email } }); // Navega a la página de nueva contraseña
       } else if (role === "update") {
-        await axios.post("http://localhost:3004/updateAccount", data, {
+        console.log(data);
+        await axios.post("http://localhost:3004/updateAccountW", data, {
           headers: { "Content-Type": "multipart/form-data" },
         }).then((response) => {
           setInfo(response.data);

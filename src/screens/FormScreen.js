@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom"; // Usamos react-rou
 import { FiFolder, FiChevronDown, FiEdit } from "react-icons/fi"; // Iconos de React Icons
 import Select from "react-select"; // Componente para el dropdown
 import axios from "axios";
-//import "./styles/FormScreen.css"; // Estilos CSS
+import "./styles/FormScreen.css"; // Estilos CSS
 
 export default function CreateObservation() {
   // Estados para los datos de cada dropdown
@@ -593,7 +593,7 @@ export default function CreateObservation() {
         </div>
       </div>
       <button
-        className="button"
+        className="buttonF"
         onClick={() => {
           navigate("/form-screen-dos", {
             state: {

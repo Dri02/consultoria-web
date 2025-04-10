@@ -1,4 +1,4 @@
-  import React, { useState, useEffect } from "react";
+  import React, { useState, useEffect, useRef } from "react";
   import {
     BrowserRouter,
     Routes,
@@ -40,7 +40,24 @@
   const MainLayout = ({ onLogout }) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const navigate = useNavigate();
-  
+    const drawerRef = useRef(null); // Ref para el drawer
+    const toggleButtonRef = useRef(null); // Ref para el botón de toggle
+
+    // Efecto para detectar clics fuera del drawer
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        if (isDrawerOpen && !drawerRef.current?.contains(event.target) && !toggleButtonRef.current?.contains(event.target)) {
+          setIsDrawerOpen(false);
+        }
+      };
+
+      document.addEventListener("mousedown", handleClickOutside);
+      
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [isDrawerOpen]);
+
     return (
       <LayoutContainer>
         <Header>
@@ -51,16 +68,21 @@
           </Nav>
           <HeaderRight>
             <button
-              className="header-drawer-toggle"
-              onClick={() => setIsDrawerOpen(!isDrawerOpen)}
-            >
-              <FiMoreVertical size={30} color="white" />
+            ref={toggleButtonRef}
+            style={styles.optionButton}
+            className="header-drawer-toggle"
+            onClick={() => setIsDrawerOpen(!isDrawerOpen)}
+          >
+            <FiMoreVertical size={30} color="white" />
             </button>
           </HeaderRight>
         </Header>
   
         <Content>
-          {isDrawerOpen && <Drawer />}
+          {isDrawerOpen && (<div ref={drawerRef}> 
+            <Drawer />
+          </div>
+        )}
   
           {/* Aquí envolvemos el Outlet con un contenedor 
               que incluya el BackArrowIfNotHome */}
@@ -178,6 +200,16 @@
 
   // Estilos con styled-components
 
+  const styles ={
+    optionButton: {
+      padding: "10px 20px",
+      background: " #3366ff",
+      border: "none",
+      width: "100%",
+      textAlign: "left",
+      cursor: "pointer",
+    },
+  }
   const LayoutContainer = styled.div`
   display: flex;
   flex-direction: column;

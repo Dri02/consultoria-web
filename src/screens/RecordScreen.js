@@ -84,7 +84,7 @@ export default function RecordScreen() {
   };
 
   const finish = async () => {
-    setIsModalFinishVisible(false);
+    setIsModalFinishVisible(true);
     navigate("/home");
   };
 
@@ -343,7 +343,7 @@ export default function RecordScreen() {
               <div className="containerModalInfoButton">
                 <button
                   className="modalInfoButton"
-                  onClick={() => setIsModalFinishVisible(false)}
+                  onClick={() => setIsModalFinishVisible(true)}
                 >
                   Continuar
                 </button>

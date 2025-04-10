@@ -6,7 +6,8 @@
   export default function Profile() {
     const location = useLocation();
     const navigate = useNavigate();
-    const { data } = location.state || {};
+    const { state } = useLocation();
+    const { data } = state || {};
 
     // Si no se encuentran datos, muestra un mensaje y botón para volver
     if (!data) {
@@ -21,6 +22,8 @@
         </div>
       );
     }
+
+    console.log(data);
 
     return (
       <div className="container">
@@ -51,7 +54,7 @@
             <p className="valueDetailItem">{data.email}</p>
           </div>
         </div>
-        <button onClick={() => navigate("/update-account")} 
+        <button onClick={() => navigate("/access-account", {state: {data: data}})} 
         className="updateButton">Actualizar Cuenta
         </button>
         <button onClick={() => navigate(-1)} className="backButton">

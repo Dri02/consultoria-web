@@ -345,7 +345,7 @@ export default function Consultancies() {
                           <p style={styles.detailsDateElements}>
                             {folderContent[folder.name]?.endDate.split(" ")[0]}
                           </p>
-                          <p style={{ ...styles.detailsDateElements, ...styles.detailsSeparatorElements }}>
+                          {/* <p style={{ ...styles.detailsDateElements, ...styles.detailsSeparatorElements }}>
                             {" • "}
                           </p>
                           <p style={styles.detailsDateElements}>
@@ -356,7 +356,7 @@ export default function Consultancies() {
                                   folderContent[folder.name]?.endDate
                                 )
                               : "N/A"}
-                          </p>
+                          </p> */}
                         </>
                       )}
                   </div>

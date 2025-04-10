@@ -25,6 +25,7 @@ export default function Home() {
   // Se espera recibir isUpdateFolderDataParams a través de location.state
   const { isUpdateFolderDataParams } = location.state || {};
   const iconRefs = useRef([]);
+  const optionsMenuRef = useRef();
 
   // Función para obtener los datos de las carpetas
   const getFoldersData = async () => {
@@ -145,6 +146,7 @@ export default function Home() {
       a.remove();
       window.URL.revokeObjectURL(url);
       console.log("Zip file downloaded");
+      
     } catch (error) {
       setInfo(error.response?.data || "Error al descargar");
     }
@@ -164,6 +166,7 @@ export default function Home() {
       setIsUpdateFolderData(true);
       setShowOptions(false);
       getFoldersData();
+      window.Document.caller();
     } catch (error) {
       setInfo(error.response?.data || "Error al eliminar");
     }
@@ -261,6 +264,35 @@ export default function Home() {
         });
     }
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Verifica si el clic está fuera del menú y del ícono que lo activó
+      if (showOptions && selectedItemIndex !== -1) {
+        const iconRef = iconRefs.current[selectedItemIndex];
+        const menuRef = optionsMenuRef.current;
+        
+        if (
+          iconRef &&
+          !iconRef.contains(event.target) && // No está en el ícono
+          menuRef &&
+          !menuRef.contains(event.target) // No está en el menú
+        ) {
+          setShowOptions(false); // Cierra el menú
+        }
+      }
+    };
+  
+    // Agrega el listener solo cuando el menú está abierto
+    if (showOptions) {
+      document.addEventListener("click", handleClickOutside);
+    }
+  
+    // Limpia el listener al desmontar o cerrar el menú
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [showOptions, selectedItemIndex]); // Dependencias del efecto
 
   return (
     <div style={styles.container}>
@@ -370,17 +402,18 @@ export default function Home() {
       )}
       {showOptions && (
         <div
-          style={{
-            position: "fixed",
-            top: optionsTop,
-            left: optionsLeft - 130,
-            backgroundColor: "white",
-            borderRadius: 20,
-            boxShadow: "0px 2px 8px rgba(0,0,0,0.2)",
-            width: 130,
-            zIndex: 1000,
-          }}
-          onClick={(e) => e.stopPropagation()}
+        ref={optionsMenuRef}
+        style={{
+          position: "fixed",
+          top: optionsTop,
+          left: optionsLeft - 130,
+          backgroundColor: "white",
+          borderRadius: 20,
+          boxShadow: "0px 2px 8px rgba(0,0,0,0.2)",
+          width: 130,
+          zIndex: 1000,
+        }}
+        onClick={(e) => e.stopPropagation()}
         >
           <button style={styles.optionButton} onClick={downloadConsultancy}>
             Descargar

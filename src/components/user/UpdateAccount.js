@@ -20,7 +20,8 @@ export default function UpdateAccount() {
 
   const location = useLocation(); // Obtiene los parámetros de la ruta
   const navigate = useNavigate(); // Para la navegación
-  const { data } = location.state || {}; // Extrae los parámetros
+  const { state } = useLocation();
+  const { data } = state || {};
 
   // Verifica que ninguno de los campos requeridos esté vacío
   const isAnyFieldEmpty = () => {
@@ -74,10 +75,11 @@ export default function UpdateAccount() {
   // Envía la solicitud para actualizar la cuenta. Primero se verifica el correo y luego se navega a la verificación.
   const updateAccount = async () => {
     // Datos para la verificación del correo
+    console.log(data);
     const dataPayload = JSON.stringify({
       username: user,
       email: email,
-      olduser: user,
+      olduser: olduser,
       oldemail: email,
     });
     
@@ -103,7 +105,7 @@ export default function UpdateAccount() {
       );
       setInfo(response.data);
       navigate("/verify-email", {
-        state: { email, role: "update", data },
+        state: { email, role: "update", data: dataPayload },
       });
     } catch (error) {
       setInfo(

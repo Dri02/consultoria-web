@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { FiChevronUp, FiChevronDown } from "react-icons/fi";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FiChevronUp, FiChevronDown, FiEdit } from "react-icons/fi";
 import "./styles/Details.css"
 
 export default function Details() {
   const [showMore, setShowMore] = useState(false);
   const location = useLocation();
   const { data, isConsultancy } = location.state || {};
+  const navigate = useNavigate();
 
   const formatDate = (dateTime) => {
     // Se asume que dateTime tiene el formato "DD/MM/YYYY HH:MM:SS AM/PM"
@@ -101,9 +102,21 @@ export default function Details() {
     </div>
   );
 
+  const editDetails = () => {
+    navigate("/update-details", {
+      state: {
+
+      },
+    });
+  };
+
   return (
     <div className="scrollContainer">
       <div className="container">
+        {/* <button className="drawer-menu-option" onClick={editDetails}>
+          <FiEdit size={24} />
+          <span className="drawer-menu-text">Editar Detalles</span>
+        </button> */}
         <div className="header">
           <img
             src={`data:image/png;base64,${data.thumbnail}`}

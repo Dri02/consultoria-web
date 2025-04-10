@@ -13,7 +13,8 @@ export default function AccessAccount() {
   
   const location = useLocation();
   const navigate = useNavigate();
-  const { dataParams } = location.state || {};
+  const { state } = useLocation();
+  const { data } = state || {};
 
   // Verifica que el campo contraseña no esté vacío
   const isAnyFieldEmpty = () => {
@@ -32,16 +33,19 @@ export default function AccessAccount() {
 
   // Realiza la petición para acceder a la cuenta
   const accessAccount = async () => {
-    const data = JSON.stringify({
+    const dataParams = JSON.stringify({
       username: user,
       password: password,
     });
 
+    console.log("Data: ", data);
+    console.log("DataParams: ", dataParams);
+
     try {
-      await axios.post("http://localhost:3004/accessAccount", data, {
+      await axios.post("http://localhost:3004/accessAccount", dataParams, {
         headers: { "Content-Type": "application/json" },
       });
-      navigate("/update-account", { state: { data: dataParams } });
+      navigate("/update-account", { state: { data: data } });
     } catch (error) {
       setInfo(error.response?.data || "Error al conectar con el servidor");
     }

@@ -8,11 +8,13 @@ export default function VerifyEmail() {
   const [code, setCode] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [infoModal, setInfoModal] = useState("");
+  const { state } = useLocation();
+  const { email, role, data } = state || {};
   
   // Extrae parámetros de la ruta (email, role y data)
   const location = useLocation();
   const navigate = useNavigate();
-  const { email, role, data } = location.state || {};
+  // const { email, role, data } = location.state || {};
 
   // Verifica que el campo código no esté vacío
   const isAnyFieldEmpty = () => {
@@ -37,6 +39,7 @@ export default function VerifyEmail() {
         headers: { "Content-Type": "application/json" },
       });
       console.log(payload, role)
+      console.log(data);
       setInfo(response.data);
 
       if (role === "register") {

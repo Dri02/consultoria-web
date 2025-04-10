@@ -43,12 +43,13 @@ const RenderHeaderRight = ({ route }) => {
         </div>
       </div>
     ) : (
-      route.name === "Details" &&
-      (route.params.data.user === route.params.data.author ||
-        route.params.data.collaborators.includes(route.params.data.user)) && (
+      location.pathname === "/details" &&
+      // (route.params.data.user === route.params.data.author ||
+      //   route.params.data.collaborators.includes(route.params.data.user)) && 
+      (
         <div>
           <button onClick={() => {
-            route.name === "Details" ?
+            location.pathname === "/details" ?
               navigate("/update-details", { state: { data: route.params.data, isConsultancy: route.params.isConsultancy } }) :
               navigate("/access-account", { state: { dataParams: route.params.data } });
           }}>

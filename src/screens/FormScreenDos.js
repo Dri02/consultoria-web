@@ -3,7 +3,7 @@ import { data, useLocation, useNavigate } from "react-router-dom"; // Para manej
 import { FiFolder, FiChevronDown, FiEdit } from "react-icons/fi"; // Iconos
 import Select from "react-select"; // Para dropdown y multiselect
 import axios from "axios";
-//import "./styles/FormScreenDos.css"; // Estilos CSS
+import "./styles/FormScreenDos.css"; // Estilos CSS
 
 export default function CreateConsultancy() {
   const [nameConsultancy, setNameConsultancy] = useState("");
@@ -199,7 +199,7 @@ export default function CreateConsultancy() {
         </div>
 
         {/* Textarea para objetivos */}
-        <div className="textInput">
+        <div className="textInputO">
           <textarea
             placeholder="Introduce los objetivos"
             value={goals.join("\n")}
@@ -213,7 +213,7 @@ export default function CreateConsultancy() {
           />
         </div>
       </div>
-      <button className="button" onClick={sendData}>
+      <button className="buttonF" onClick={sendData}>
         Siguiente
       </button>
       {isModalVisible && (

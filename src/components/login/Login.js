@@ -37,7 +37,7 @@ export default function Login() {
         localStorage.setItem("token", token);
         console.log("Token guardado exitosamente");
 
-        setInfo(`Bienvenido ${user} a ConsulTorIa`);
+        // setInfo(`Bienvenido ${user} a ConsulTorIa`);
         navigate("home");
       }
     } catch (error) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Navegación en web
-import { FiUser, FiLogOut, FiInfo, FiEdit } from "react-icons/fi"; // Iconos de react-icons
+import { FiUser, FiLogOut, FiInfo, FiEdit, FiDownload } from "react-icons/fi"; // Iconos de react-icons
 import axios from "axios";
 import "../styles/CustomDrawerContent.css"; // Asegúrate de ajustar la ruta
 
@@ -18,17 +18,26 @@ export default function Drawer() {
   const detailsAccount = () => {
     navigate("/profile", {
       state: {
-        data: { name, lastname, user, email, photo },
+        data: { 
+          name: name, 
+          lastname: lastname, 
+          user: user, 
+          email: email, 
+          photo: photo },
       },
     });
   };
 
-  const editDetails = () => {
-    navigate("/update-details", {
-      state: {
-        data: { name, lastname, user, email, photo },
-      },
-    });
+  // const editDetails = () => {
+  //   navigate("/update-details", {
+  //     state: {
+  //       data: { name, lastname, user, email, photo },
+  //     },
+  //   });
+  // };
+
+  const download = () => {
+
   };
 
   const setInfo = (info) => {
@@ -94,9 +103,13 @@ export default function Drawer() {
           <FiUser size={24} />
           <span className="drawer-menu-text">Cuenta</span>
         </button>
-        <button className="drawer-menu-option" onClick={editDetails}>
+        {/* <button className="drawer-menu-option" onClick={editDetails}>
           <FiEdit size={24} />
           <span className="drawer-menu-text">Editar Detalles</span>
+        </button> */}
+        <button className="drawer-menu-option" onClick={download}>
+          <FiDownload size={24} />
+          <span className="drawer-menu-text">Descargar apk</span>
         </button>
         <button
           className="drawer-menu-option"

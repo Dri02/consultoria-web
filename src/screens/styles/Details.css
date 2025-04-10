@@ -89,3 +89,14 @@ body {
   background-color: #e5e5e5;
   margin-top: 10px;
 }
+
+.drawer-menu-option{
+  display: flex;
+  align-items: center;
+  background: #f7f7f7;
+  border: none;
+  border-radius: 5px;
+  padding: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
